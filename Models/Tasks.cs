@@ -1,0 +1,43 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+
+namespace KiwiTaskAPI.Models
+{
+    // Model 是面向业务的
+    public class Tasks
+    {
+        [Key]
+        public Guid id { get; set; }
+        [Required]
+        public Guid poster_id { get; set; }
+        [Required]
+        [MaxLength(100)]
+        public string title { get; set; }
+        [Required]
+        public string description { get; set; }
+        [Required]
+        public TaskType type { get; set; }
+        [Required]
+        public PricingType pricing_type { get; set; }
+        [Required]
+        public DateTime expires_at { get; set; }
+        public decimal? estimated_hours { get; set; }
+        public string? budget { get; set; }
+        public decimal? budget_amount { get; set; }
+        [Required]
+        public string location { get; set; }
+        public string? suburb { get; set; }
+        public string? city { get; set; }
+        public string? postcode { get; set; }
+        public decimal? latitude { get; set; }
+        public decimal? longitude { get; set; }
+        public virtual ICollection<Attachment> attachments { get; set; } = new List<Attachment>();  // 一个任务，会有多个附件
+        [Required]
+        public DateTime created_at { get; set; }
+        [Required]
+        public DateTime updated_at { get; set; }
+
+        public virtual ICollection<TaskCategory> TaskCategories { get; set; } = new List<TaskCategory>();   // 一个任务，会有多个多个类别
+
+    }
+}

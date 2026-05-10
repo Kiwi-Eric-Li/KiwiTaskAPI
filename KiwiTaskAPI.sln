@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35806.99 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KiwiTaskAPI", "KiwiTaskAPI.csproj", "{EC3455AA-29C6-4561-AABA-97222C7B6143}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EC3455AA-29C6-4561-AABA-97222C7B6143}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC3455AA-29C6-4561-AABA-97222C7B6143}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC3455AA-29C6-4561-AABA-97222C7B6143}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC3455AA-29C6-4561-AABA-97222C7B6143}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AA5C7789-EADB-44DE-B56E-0CC081854175}
+	EndGlobalSection
+EndGlobal
