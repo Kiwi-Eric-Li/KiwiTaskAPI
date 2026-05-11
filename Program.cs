@@ -19,6 +19,7 @@ namespace KiwiTaskAPI
             builder.Services.AddScoped<ITaskRepository, TaskRepository>();
             builder.Services.AddScoped<IAuthServiceRepository, AuthServiceRepository>();
             builder.Services.AddScoped<IMailService, MailServiceRepository>();
+            builder.Services.AddScoped<ITaskCategoryRepository, TaskCategoryRepository>();
 
 
             // 注册控制器的服务

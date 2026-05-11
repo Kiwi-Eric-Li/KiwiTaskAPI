@@ -37,7 +37,5 @@ namespace KiwiTaskAPI.Models
         [Required]
         public DateTime updated_at { get; set; }
 
-        public virtual ICollection<TaskCategory> TaskCategories { get; set; } = new List<TaskCategory>();   // 一个任务，会有多个多个类别
-
     }
 }

@@ -6,7 +6,6 @@ namespace KiwiTaskAPI.Dtos
 {
     public class TasksDto
     {
-        // DTO 是面向UI的
         public Guid id { get; set; }
         
         public Guid poster_id { get; set; }

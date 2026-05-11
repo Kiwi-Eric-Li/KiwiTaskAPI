@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KiwiTaskAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260426072315_InitialCreate_01")]
-    partial class InitialCreate_01
+    [Migration("20260511032627_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -64,20 +64,11 @@ namespace KiwiTaskAPI.Migrations
                     b.Property<bool?>("is_active")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("task_id")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<Guid?>("taskid")
-                        .HasColumnType("char(36)");
-
                     b.Property<string>("title")
                         .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("id");
-
-                    b.HasIndex("taskid");
 
                     b.ToTable("task_categories");
                 });
@@ -171,6 +162,9 @@ namespace KiwiTaskAPI.Migrations
 
                     b.HasKey("id");
 
+                    b.HasIndex("user_id")
+                        .IsUnique();
+
                     b.ToTable("user_password");
                 });
 
@@ -240,9 +234,6 @@ namespace KiwiTaskAPI.Migrations
                     b.Property<DateTime?>("updated_at")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int?>("user_passwordid")
-                        .HasColumnType("int");
-
                     b.Property<string>("username")
                         .HasColumnType("longtext");
 
@@ -257,8 +248,6 @@ namespace KiwiTaskAPI.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("user_passwordid");
-
                     b.ToTable("users");
                 });
 
@@ -269,29 +258,25 @@ namespace KiwiTaskAPI.Migrations
                         .HasForeignKey("Tasksid");
                 });
 
-            modelBuilder.Entity("KiwiTaskAPI.Models.TaskCategory", b =>
+            modelBuilder.Entity("KiwiTaskAPI.Models.UserPassword", b =>
                 {
-                    b.HasOne("KiwiTaskAPI.Models.Tasks", "task")
-                        .WithMany("TaskCategories")
-                        .HasForeignKey("taskid");
+                    b.HasOne("KiwiTaskAPI.Models.Users", "user")
+                        .WithOne("user_password")
+                        .HasForeignKey("KiwiTaskAPI.Models.UserPassword", "user_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("task");
-                });
-
-            modelBuilder.Entity("KiwiTaskAPI.Models.Users", b =>
-                {
-                    b.HasOne("KiwiTaskAPI.Models.UserPassword", "user_password")
-                        .WithMany()
-                        .HasForeignKey("user_passwordid");
-
-                    b.Navigation("user_password");
+                    b.Navigation("user");
                 });
 
             modelBuilder.Entity("KiwiTaskAPI.Models.Tasks", b =>
                 {
-                    b.Navigation("TaskCategories");
-
                     b.Navigation("attachments");
+                });
+
+            modelBuilder.Entity("KiwiTaskAPI.Models.Users", b =>
+                {
+                    b.Navigation("user_password");
                 });
 #pragma warning restore 612, 618
         }
