@@ -21,6 +21,11 @@ namespace KiwiTaskAPI
             builder.Services.AddScoped<IMailService, MailServiceRepository>();
             builder.Services.AddScoped<ITaskCategoryRepository, TaskCategoryRepository>();
 
+            builder.Services.AddHttpClient<IPlacesService, PlaceServiceRepository>(client =>
+            {
+                client.BaseAddress = new Uri("https://maps.googleapis.com/maps/api/");
+                client.Timeout = TimeSpan.FromSeconds(10);
+            });
 
             // 注册控制器的服务
             builder.Services.AddControllers(setupAction =>
