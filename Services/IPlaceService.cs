@@ -2,7 +2,7 @@
 
 namespace KiwiTaskAPI.Services
 {
-    public interface IPlacesService
+    public interface IPlaceService
     {
         Task<List<PredictionDto>> AutocompleteAsync(string input, string? session);
     }

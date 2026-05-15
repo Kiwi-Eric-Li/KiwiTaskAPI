@@ -5,7 +5,7 @@ using System.Text.Json;
 
 namespace KiwiTaskAPI.Services
 {
-    public class PlaceServiceRepository : IPlacesService
+    public class PlaceServiceRepository : IPlaceService
     {
         private readonly HttpClient _http;
         private readonly string _key;
