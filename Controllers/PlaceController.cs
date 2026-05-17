@@ -28,5 +28,19 @@ namespace KiwiTaskAPI.Controllers
                 data = result
             });
         }
+        [HttpGet("details")]
+        public async Task<ActionResult<PlaceResolvedDto>> Details([FromQuery] string place_id, [FromQuery] string? session)
+        {
+            if (string.IsNullOrWhiteSpace(place_id))
+            {
+                return BadRequest(new { error = "place_id is required" });
+            }
+            var place = await _placesServiceRepository.GetDetailsAsync(place_id, session);
+            return Ok(new
+            {
+                code = 0,
+                data = place
+            });
+        } 
     }
 }
