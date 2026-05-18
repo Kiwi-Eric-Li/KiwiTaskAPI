@@ -28,7 +28,10 @@ namespace KiwiTaskAPI.Controllers
                 return NotFound("Task categories cannot be found.");
             }
             var taskCategoryDto = _mapper.Map<IEnumerable<TaskCategoryDto>>(taskCategoryRepo);
-            return Ok(taskCategoryDto);
+            return Ok(new { 
+                code =0,
+                data = taskCategoryDto
+            });
         }
 
 
