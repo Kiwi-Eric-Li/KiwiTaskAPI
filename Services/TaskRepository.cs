@@ -2,7 +2,9 @@
 
 
 using KiwiTaskAPI.Database;
+using KiwiTaskAPI.Dtos;
 using KiwiTaskAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace KiwiTaskAPI.Services
 {
@@ -51,14 +53,19 @@ namespace KiwiTaskAPI.Services
         //    };
         //}
 
-        public Tasks GetTaskById(Guid taskId)
+        public async Task<Tasks> GetTaskByIdAsync(Guid taskId)
         {
-            return _context.tasks.FirstOrDefault(n => n.id == taskId);
+            return await _context.tasks.FirstOrDefaultAsync(n => n.id == taskId);
         }
 
-        public IEnumerable<Tasks> GetTasks()
+        public async Task<IEnumerable<Tasks>> GetTasksAsync()
         {
-            return _context.tasks;
+            return await _context.tasks.ToListAsync();
+        }
+
+        public async Task<int> CreateTaskAsync(Guid poster_id, TasksDto taskDto)
+        {
+            return 1;
         }
     }
 }

@@ -1,12 +1,14 @@
-﻿using KiwiTaskAPI.Models;
+﻿using KiwiTaskAPI.Dtos;
+using KiwiTaskAPI.Models;
 
 namespace KiwiTaskAPI.Services
 {
     public interface ITaskRepository
     {
         // 返回所有的任务
-        IEnumerable<Tasks> GetTasks();
+        Task<IEnumerable<Tasks>> GetTasksAsync();
         // 根据任务id，返回单个任务
-        Tasks GetTaskById(Guid taskId);
+        Task<Tasks> GetTaskByIdAsync(Guid taskId);
+        Task<int> CreateTaskAsync(Guid poster_id, TasksDto taskDto);
     }
 }

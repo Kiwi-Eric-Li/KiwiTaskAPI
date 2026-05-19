@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using KiwiTaskAPI.Dtos;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace KiwiTaskAPI.Controllers
 {
@@ -19,9 +21,9 @@ namespace KiwiTaskAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllTasks()      // IActionResult 返回的是HTTP的响应结果
+        public async Task<IActionResult> GetAllTasks()      // IActionResult 返回的是HTTP的响应结果
         {
-            var tasksRepo = _taskRepository.GetTasks();
+            var tasksRepo = await _taskRepository.GetTasksAsync();
             if(tasksRepo == null || tasksRepo.Count() < 0)
             {
                 return NotFound("There are no tasks.");
@@ -31,15 +33,27 @@ namespace KiwiTaskAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetTaskById(Guid id)
+        public async Task<IActionResult> GetTaskById(Guid id)
         {
-            var taskRepo = _taskRepository.GetTaskById(id);
+            var taskRepo = await _taskRepository.GetTaskByIdAsync(id);
             if(taskRepo == null)
             {
                 return NotFound("This task cannot be found.");
             }
             var taskDto = _mapper.Map<TasksDto>(taskRepo);
             return Ok(taskDto);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> CreateTask([FromBody] TasksDto dto)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+
+
+
+            return Ok(userId);
         }
     }
 }
