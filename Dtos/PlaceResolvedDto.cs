@@ -10,4 +10,11 @@
         double? Latitude,
         double? Longitude
     );
+
+    public record TaskMediaConfirmDto
+    (
+        string Url,
+        string ContextType,
+        long ContextId
+    );
 }
