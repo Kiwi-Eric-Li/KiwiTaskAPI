@@ -22,7 +22,7 @@ namespace KiwiTaskAPI.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
-            modelBuilder.Entity("KiwiTaskAPI.Models.Attachment", b =>
+            modelBuilder.Entity("KiwiTaskAPI.Models.TaskAttachment", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -50,25 +50,10 @@ namespace KiwiTaskAPI.Migrations
 
                     b.HasIndex("Tasksid");
 
-                    b.ToTable("attachments");
+                    b.ToTable("task_attachments");
                 });
 
-            modelBuilder.Entity("KiwiTaskAPI.Models.TaskCategory", b =>
-                {
-                    b.Property<string>("id")
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<bool?>("is_active")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("title")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("id");
-
-                    b.ToTable("task_categories");
-                });
+            
 
             modelBuilder.Entity("KiwiTaskAPI.Models.Tasks", b =>
                 {
@@ -78,9 +63,6 @@ namespace KiwiTaskAPI.Migrations
 
                     b.Property<string>("budget")
                         .HasColumnType("longtext");
-
-                    b.Property<decimal?>("budget_amount")
-                        .HasColumnType("decimal(65,30)");
 
                     b.Property<string>("city")
                         .HasColumnType("longtext");
@@ -93,7 +75,7 @@ namespace KiwiTaskAPI.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<decimal?>("estimated_hours")
-                        .HasColumnType("decimal(65,30)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("expires_at")
                         .HasColumnType("datetime(6)");
@@ -102,7 +84,6 @@ namespace KiwiTaskAPI.Migrations
                         .HasColumnType("decimal(65,30)");
 
                     b.Property<string>("location")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<decimal?>("longitude")
@@ -117,16 +98,19 @@ namespace KiwiTaskAPI.Migrations
                     b.Property<int>("pricing_type")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("schedule_time")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("suburb")
                         .HasColumnType("longtext");
+
+                    b.Property<int>("task_type")
+                        .HasColumnType("int");
 
                     b.Property<string>("title")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
-
-                    b.Property<int>("type")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("updated_at")
                         .HasColumnType("datetime(6)");
@@ -136,145 +120,24 @@ namespace KiwiTaskAPI.Migrations
                     b.ToTable("tasks");
                 });
 
-            modelBuilder.Entity("KiwiTaskAPI.Models.UserPassword", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+            
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("id"));
+            
 
-                    b.Property<DateTime>("created_at")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("password_hash")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime>("updated_at")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<Guid>("user_id")
-                        .HasColumnType("char(36)");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("user_id")
-                        .IsUnique();
-
-                    b.ToTable("user_password");
-                });
-
-            modelBuilder.Entity("KiwiTaskAPI.Models.Users", b =>
-                {
-                    b.Property<Guid>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("avatar_url")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("bio")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime?>("created_at")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("educations")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("email")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("experiences")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("firstname")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("introduction")
-                        .HasColumnType("longtext");
-
-                    b.Property<bool?>("is_active")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool?>("is_recommand_required")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("lastname")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("phone_number")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("refresh_token")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime?>("refresh_token_expiry")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("reset_token")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime?>("reset_token_expiry")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("roles")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("skills")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("social_links")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime?>("updated_at")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("username")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("wished_job_categories")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("wished_job_locations")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("wished_job_types")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("id");
-
-                    b.ToTable("users");
-                });
-
-            modelBuilder.Entity("KiwiTaskAPI.Models.Attachment", b =>
+            modelBuilder.Entity("KiwiTaskAPI.Models.TaskAttachment", b =>
                 {
                     b.HasOne("KiwiTaskAPI.Models.Tasks", null)
-                        .WithMany("attachments")
+                        .WithMany("task_attachments")
                         .HasForeignKey("Tasksid");
                 });
 
-            modelBuilder.Entity("KiwiTaskAPI.Models.UserPassword", b =>
-                {
-                    b.HasOne("KiwiTaskAPI.Models.Users", "user")
-                        .WithOne("user_password")
-                        .HasForeignKey("KiwiTaskAPI.Models.UserPassword", "user_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("user");
-                });
+            
 
             modelBuilder.Entity("KiwiTaskAPI.Models.Tasks", b =>
                 {
-                    b.Navigation("attachments");
+                    b.Navigation("task_attachments");
                 });
 
-            modelBuilder.Entity("KiwiTaskAPI.Models.Users", b =>
-                {
-                    b.Navigation("user_password");
-                });
 #pragma warning restore 612, 618
         }
     }

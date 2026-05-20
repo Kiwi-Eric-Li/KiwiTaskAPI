@@ -20,6 +20,7 @@ namespace KiwiTaskAPI
             builder.Services.AddScoped<IAuthServiceRepository, AuthServiceRepository>();
             builder.Services.AddScoped<IMailService, MailServiceRepository>();
             builder.Services.AddScoped<ITaskCategoryRepository, TaskCategoryRepository>();
+            builder.Services.AddScoped<IOssService, IOssServiceRepository>();
 
             builder.Services.AddHttpClient<IPlaceService, PlaceServiceRepository>(client =>
             {
@@ -44,6 +45,8 @@ namespace KiwiTaskAPI
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection("SmtpOptions"));
+
+            builder.Services.AddOptions<OssOptions>().Bind(builder.Configuration.GetSection("AliyunOss")).ValidateDataAnnotations().ValidateOnStart();
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                             .AddJwtBearer(opt =>

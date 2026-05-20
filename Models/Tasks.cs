@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 
 namespace KiwiTaskAPI.Models
@@ -16,22 +17,25 @@ namespace KiwiTaskAPI.Models
         [Required]
         public string description { get; set; }
         [Required]
-        public TaskType type { get; set; }
+        public TaskType task_type { get; set; }    // remote, offline
         [Required]
-        public PricingType pricing_type { get; set; }
+        public PricingType pricing_type { get; set; }       // fixed, hourly
+        public string? budget { get; set; }
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal? estimated_hours { get; set; }
         [Required]
         public DateTime expires_at { get; set; }
-        public decimal? estimated_hours { get; set; }
-        public string? budget { get; set; }
-        public decimal? budget_amount { get; set; }
-        [Required]
-        public string location { get; set; }
+
+        public string? location { get; set; }
         public string? suburb { get; set; }
         public string? city { get; set; }
         public string? postcode { get; set; }
         public decimal? latitude { get; set; }
         public decimal? longitude { get; set; }
-        public virtual ICollection<Attachment> attachments { get; set; } = new List<Attachment>();  // 一个任务，会有多个附件
+        [Required]
+        public DateTime schedule_time { get; set; }
+        public virtual ICollection<TaskAttachment> task_attachments { get; set; } = new List<TaskAttachment>();  // 一个任务，会有多个附件
         [Required]
         public DateTime created_at { get; set; }
         [Required]

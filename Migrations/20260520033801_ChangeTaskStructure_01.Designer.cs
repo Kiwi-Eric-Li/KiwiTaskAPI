@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KiwiTaskAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260511032627_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260520033801_ChangeTaskStructure_01")]
+    partial class ChangeTaskStructure_01
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace KiwiTaskAPI.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
-            modelBuilder.Entity("KiwiTaskAPI.Models.Attachment", b =>
+            modelBuilder.Entity("KiwiTaskAPI.Models.TaskAttachment", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -53,7 +53,7 @@ namespace KiwiTaskAPI.Migrations
 
                     b.HasIndex("Tasksid");
 
-                    b.ToTable("attachments");
+                    b.ToTable("task_attachments");
                 });
 
             modelBuilder.Entity("KiwiTaskAPI.Models.TaskCategory", b =>
@@ -82,9 +82,6 @@ namespace KiwiTaskAPI.Migrations
                     b.Property<string>("budget")
                         .HasColumnType("longtext");
 
-                    b.Property<decimal?>("budget_amount")
-                        .HasColumnType("decimal(65,30)");
-
                     b.Property<string>("city")
                         .HasColumnType("longtext");
 
@@ -96,7 +93,7 @@ namespace KiwiTaskAPI.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<decimal?>("estimated_hours")
-                        .HasColumnType("decimal(65,30)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("expires_at")
                         .HasColumnType("datetime(6)");
@@ -105,7 +102,6 @@ namespace KiwiTaskAPI.Migrations
                         .HasColumnType("decimal(65,30)");
 
                     b.Property<string>("location")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<decimal?>("longitude")
@@ -120,16 +116,19 @@ namespace KiwiTaskAPI.Migrations
                     b.Property<int>("pricing_type")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("schedule_time")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("suburb")
                         .HasColumnType("longtext");
+
+                    b.Property<int>("task_type")
+                        .HasColumnType("int");
 
                     b.Property<string>("title")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
-
-                    b.Property<int>("type")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("updated_at")
                         .HasColumnType("datetime(6)");
@@ -251,10 +250,10 @@ namespace KiwiTaskAPI.Migrations
                     b.ToTable("users");
                 });
 
-            modelBuilder.Entity("KiwiTaskAPI.Models.Attachment", b =>
+            modelBuilder.Entity("KiwiTaskAPI.Models.TaskAttachment", b =>
                 {
                     b.HasOne("KiwiTaskAPI.Models.Tasks", null)
-                        .WithMany("attachments")
+                        .WithMany("task_attachments")
                         .HasForeignKey("Tasksid");
                 });
 
@@ -271,7 +270,7 @@ namespace KiwiTaskAPI.Migrations
 
             modelBuilder.Entity("KiwiTaskAPI.Models.Tasks", b =>
                 {
-                    b.Navigation("attachments");
+                    b.Navigation("task_attachments");
                 });
 
             modelBuilder.Entity("KiwiTaskAPI.Models.Users", b =>

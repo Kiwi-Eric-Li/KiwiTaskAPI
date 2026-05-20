@@ -10,8 +10,8 @@ namespace KiwiTaskAPI.Profiles
         {   // 会自动映射两个类中名字相同的字段
             CreateMap<Tasks, TasksDto>()
                 .ForMember(
-                    dest => dest.type,
-                    opt => opt.MapFrom(src => src.type.ToString())
+                    dest => dest.task_type,
+                    opt => opt.MapFrom(src => src.task_type.ToString())
                 )
                 .ForMember(
                     dest => dest.pricing_type,

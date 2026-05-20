@@ -11,7 +11,7 @@ namespace KiwiTaskAPI.Database
 
         public DbSet<Tasks> tasks { get; set; }
         public DbSet<TaskCategory> task_categories { get; set; }
-        public DbSet<Attachment> attachments { get; set; }
+        public DbSet<TaskAttachment> task_attachments { get; set; }
         public DbSet<Users> users { get; set; }
         public DbSet<UserPassword> user_password { get; set; }
 

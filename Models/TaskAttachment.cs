@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace KiwiTaskAPI.Models
 {
-    public class Attachment
+    public class TaskAttachment
     {
 
         [Key]
