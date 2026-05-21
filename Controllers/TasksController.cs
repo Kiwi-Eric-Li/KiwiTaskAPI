@@ -51,6 +51,15 @@ namespace KiwiTaskAPI.Controllers
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
+            Console.WriteLine(dto.title);
+            Console.WriteLine(dto.description);
+            Console.WriteLine(dto.task_type);
+            Console.WriteLine(dto.pricing_type);
+            Console.WriteLine(dto.schedule_time);
+            Console.WriteLine(dto.categories);
+            Console.WriteLine(dto.expires_at);
+            Console.WriteLine(dto.location);
+            Console.WriteLine(dto.estimated_hours);
 
 
 
