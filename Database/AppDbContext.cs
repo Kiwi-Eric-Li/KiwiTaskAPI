@@ -14,6 +14,7 @@ namespace KiwiTaskAPI.Database
         public DbSet<TaskAttachment> task_attachments { get; set; }
         public DbSet<Users> users { get; set; }
         public DbSet<UserPassword> user_password { get; set; }
+        public DbSet<TaskCates> task_cates { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -14,7 +14,7 @@ namespace KiwiTaskAPI.Dtos
        
         public string description { get; set; }
        
-        public string task_type { get; set; }
+        public TaskType task_type { get; set; }
        
         public string pricing_type { get; set; }
         public string? budget { get; set; }
@@ -27,7 +27,7 @@ namespace KiwiTaskAPI.Dtos
         public decimal? latitude { get; set; }
         public decimal? longitude { get; set; }
         public DateTime schedule_time { get; set; }
-        public ICollection<TaskCategoryDto> categories { get; set; }
+        public ICollection<TaskCates> categories { get; set; }
         public ICollection<TaskAttachmentDto> task_attachments { get; set; }
     }
 }

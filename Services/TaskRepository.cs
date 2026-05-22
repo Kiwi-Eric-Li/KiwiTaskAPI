@@ -5,6 +5,7 @@ using KiwiTaskAPI.Database;
 using KiwiTaskAPI.Dtos;
 using KiwiTaskAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace KiwiTaskAPI.Services
 {
@@ -29,8 +30,29 @@ namespace KiwiTaskAPI.Services
             return await _context.tasks.ToListAsync();
         }
 
-        public async Task<int> CreateTaskAsync(Guid poster_id, TasksDto taskDto)
+        public async Task<int> CreateTaskAsync(Tasks taskEntity)
         {
+            if(taskEntity.categories.Count > 0)
+            {
+                foreach(var item in taskEntity.categories)
+                {
+                    item.task_id = taskEntity.id;
+                }
+            }
+
+            Console.WriteLine(JsonSerializer.Serialize(taskEntity));
+            Console.WriteLine(taskEntity.categories);
+
+
+
+            // using var transaction = await _context.Database.BeginTransactionAsync();
+            // 1. save task
+            // await _context.tasks.AddAsync(taskEntity);
+
+            // 2. save category
+            
+
+
             return 1;
         }
     }

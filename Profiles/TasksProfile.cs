@@ -16,7 +16,9 @@ namespace KiwiTaskAPI.Profiles
                 .ForMember(
                     dest => dest.pricing_type,
                     opt => opt.MapFrom(src => src.pricing_type.ToString())
-                );   
+                );
+
+            CreateMap<TasksDto, Tasks>();
         }
     }
 }

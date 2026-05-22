@@ -18,5 +18,11 @@ namespace KiwiTaskAPI.Services
         {
             return await _context.task_categories.ToListAsync();
         }
+
+        public async Task<int> BatchAddTaskCategory(List<TaskCates> taskCatesList)
+        {
+            await _context.task_cates.AddRangeAsync(taskCatesList);
+            return await _context.SaveChangesAsync();
+        }
     }
 }

@@ -22,120 +22,23 @@ namespace KiwiTaskAPI.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
-            modelBuilder.Entity("KiwiTaskAPI.Models.TaskAttachment", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<Guid?>("Tasksid")
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTime>("created_at")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<Guid>("ctx_id")
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid>("uploader_id")
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("url")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("Tasksid");
-
-                    b.ToTable("task_attachments");
-                });
-
             
 
-            modelBuilder.Entity("KiwiTaskAPI.Models.Tasks", b =>
+            modelBuilder.Entity("KiwiTaskAPI.Models.TaskCates", b =>
                 {
-                    b.Property<Guid>("id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<string>("id")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<Guid>("task_id")
                         .HasColumnType("char(36)");
-
-                    b.Property<string>("budget")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("city")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime>("created_at")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("description")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<decimal?>("estimated_hours")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("expires_at")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<decimal?>("latitude")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<string>("location")
-                        .HasColumnType("longtext");
-
-                    b.Property<decimal?>("longitude")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<string>("postcode")
-                        .HasColumnType("longtext");
-
-                    b.Property<Guid>("poster_id")
-                        .HasColumnType("char(36)");
-
-                    b.Property<int>("pricing_type")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("schedule_time")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("suburb")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("task_type")
-                        .HasColumnType("int");
 
                     b.Property<string>("title")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<DateTime>("updated_at")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("id");
 
-                    b.ToTable("tasks");
-                });
-
-            
-
-            
-
-            modelBuilder.Entity("KiwiTaskAPI.Models.TaskAttachment", b =>
-                {
-                    b.HasOne("KiwiTaskAPI.Models.Tasks", null)
-                        .WithMany("task_attachments")
-                        .HasForeignKey("Tasksid");
-                });
-
-            
-
-            modelBuilder.Entity("KiwiTaskAPI.Models.Tasks", b =>
-                {
-                    b.Navigation("task_attachments");
+                    b.ToTable("task_cates");
                 });
 
 #pragma warning restore 612, 618

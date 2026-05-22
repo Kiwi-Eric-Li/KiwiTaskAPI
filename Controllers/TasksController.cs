@@ -4,6 +4,8 @@ using AutoMapper;
 using KiwiTaskAPI.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Microsoft.JSInterop.Infrastructure;
+using KiwiTaskAPI.Models;
 
 namespace KiwiTaskAPI.Controllers
 {
@@ -50,17 +52,19 @@ namespace KiwiTaskAPI.Controllers
         {
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            dto.poster_id = Guid.Parse(userId);
 
-            Console.WriteLine(dto.title);
-            Console.WriteLine(dto.description);
-            Console.WriteLine(dto.task_type);
-            Console.WriteLine(dto.pricing_type);
-            Console.WriteLine(dto.schedule_time);
-            Console.WriteLine(dto.categories);
-            Console.WriteLine(dto.expires_at);
-            Console.WriteLine(dto.location);
-            Console.WriteLine(dto.estimated_hours);
+            dto.id = Guid.NewGuid();
+            if (!string.IsNullOrWhiteSpace(dto.location))
+            {
+                string[] result = dto.location.Split(",");
+                dto.suburb = result[0].Trim();
+                dto.city = result[1].Trim();
+                dto.postcode = result[2].Trim();
+            }
 
+            var taskEntity = _mapper.Map<Tasks>(dto);
+            await _taskRepository.CreateTaskAsync(taskEntity);
 
 
             return Ok(userId);
