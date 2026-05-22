@@ -19,6 +19,7 @@ namespace KiwiTaskAPI.Database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Users>().HasOne(u => u.user_password).WithOne(up => up.user).HasForeignKey<UserPassword>(up => up.user_id);
+            modelBuilder.Entity<TaskCates>().HasOne(x => x.task).WithMany(x => x.categories).HasForeignKey(x => x.task_id);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace KiwiTaskAPI.Models
 {
@@ -10,5 +11,6 @@ namespace KiwiTaskAPI.Models
         public string title { get; set; }
         [Required]
         public Guid task_id { get; set; }
+        public Tasks task { get; set; }
     }
 }

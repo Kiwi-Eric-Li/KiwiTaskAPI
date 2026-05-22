@@ -64,10 +64,10 @@ namespace KiwiTaskAPI.Controllers
             }
 
             var taskEntity = _mapper.Map<Tasks>(dto);
-            await _taskRepository.CreateTaskAsync(taskEntity);
+            int saveResult = await _taskRepository.CreateTaskAsync(taskEntity);
 
 
-            return Ok(userId);
+            return Ok(saveResult);
         }
     }
 }

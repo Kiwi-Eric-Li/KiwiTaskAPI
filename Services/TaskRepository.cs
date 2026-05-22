@@ -40,20 +40,18 @@ namespace KiwiTaskAPI.Services
                 }
             }
 
-            Console.WriteLine(JsonSerializer.Serialize(taskEntity));
-            Console.WriteLine(taskEntity.categories);
-
-
-
-            // using var transaction = await _context.Database.BeginTransactionAsync();
+            using var transaction = await _context.Database.BeginTransactionAsync();
             // 1. save task
-            // await _context.tasks.AddAsync(taskEntity);
+            await _context.tasks.AddAsync(taskEntity);
 
             // 2. save category
+            await _context.task_cates.AddRangeAsync(taskEntity.categories);
             
+            int result = await _context.SaveChangesAsync();
+            // 3. commit transaction
+            await transaction.CommitAsync();
 
-
-            return 1;
+            return result;
         }
     }
 }

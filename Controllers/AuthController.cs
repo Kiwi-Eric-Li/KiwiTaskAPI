@@ -86,7 +86,5 @@ namespace KiwiTaskAPI.Controllers
             var (result, statusCode) = await _authRepository.RefreshTokenAsync(dto.refresh_token);
             return Ok(result);
         }
-        
-
     }
 }
