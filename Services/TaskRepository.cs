@@ -40,6 +40,9 @@ namespace KiwiTaskAPI.Services
                 }
             }
 
+            taskEntity.created_at = DateTime.Now;
+            taskEntity.updated_at = DateTime.Now;
+
             using var transaction = await _context.Database.BeginTransactionAsync();
             // 1. save task
             await _context.tasks.AddAsync(taskEntity);

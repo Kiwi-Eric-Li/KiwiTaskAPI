@@ -65,9 +65,22 @@ namespace KiwiTaskAPI.Controllers
 
             var taskEntity = _mapper.Map<Tasks>(dto);
             int saveResult = await _taskRepository.CreateTaskAsync(taskEntity);
+            if(saveResult > 0)
+            {
+                return Ok(new {
+                   code = 0,
+                   message = "Add task successfully."
+                });
+            }
+            else
+            {
+                return Ok(new
+                {
+                    code = -1,
+                    message = "Failed to add the task"
+                });
+            }
 
-
-            return Ok(saveResult);
         }
     }
 }
