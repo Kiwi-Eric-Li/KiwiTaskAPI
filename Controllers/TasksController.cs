@@ -23,15 +23,18 @@ namespace KiwiTaskAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllTasks()      // IActionResult 返回的是HTTP的响应结果
+        public async Task<IActionResult> GetAllTasks()      // IActionResult returns a response of HTTP
         {
             var tasksRepo = await _taskRepository.GetTasksAsync();
             if(tasksRepo == null || tasksRepo.Count() < 0)
             {
                 return NotFound("There are no tasks.");
             }
-            var tasksDto = _mapper.Map<IEnumerable<TasksDto>>(tasksRepo);
-            return Ok(tasksDto);
+            var tasksDtoRepo = _mapper.Map<IEnumerable<TasksDto>>(tasksRepo);
+            return Ok(new { 
+                code = 0,
+                data = tasksDtoRepo
+            });
         }
 
         [HttpGet("some")]
