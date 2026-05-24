@@ -5,9 +5,12 @@ namespace KiwiTaskAPI.Services
 {
     public interface ITaskRepository
     {
-        // 返回所有的任务
+        // get all tasks
         Task<IEnumerable<Tasks>> GetTasksAsync();
-        // 根据任务id，返回单个任务
+        // get the first few tasks
+        Task<IEnumerable<Tasks>> GetFewTasksAsync();
+
+        // get a task by task_id
         Task<Tasks> GetTaskByIdAsync(Guid taskId);
         Task<int> CreateTaskAsync(Tasks taskEntity);
 

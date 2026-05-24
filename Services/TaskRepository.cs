@@ -29,6 +29,11 @@ namespace KiwiTaskAPI.Services
         {
             return await _context.tasks.ToListAsync();
         }
+        public async Task<IEnumerable<Tasks>> GetFewTasksAsync()
+        {
+            return await _context.tasks.OrderByDescending(t => t.created_at).Take(6).ToListAsync();
+        }
+
 
         public async Task<int> CreateTaskAsync(Tasks taskEntity)
         {

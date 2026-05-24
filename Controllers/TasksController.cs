@@ -34,6 +34,22 @@ namespace KiwiTaskAPI.Controllers
             return Ok(tasksDto);
         }
 
+        [HttpGet("some")]
+        public async Task<IActionResult> GetTheFirstTask()
+        {
+            var tasksRepo = await _taskRepository.GetFewTasksAsync();
+            if(tasksRepo.Count() < 0)
+            {
+                return NotFound("There are no tasks.");
+            }
+            var tasksDtoRepo = _mapper.Map<IEnumerable<TasksDto>>(tasksRepo);
+            return Ok(new
+            {
+                code = 0,
+                data = tasksDtoRepo
+            });
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTaskById(Guid id)
         {
