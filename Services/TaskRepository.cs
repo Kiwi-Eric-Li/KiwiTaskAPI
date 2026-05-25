@@ -25,9 +25,21 @@ namespace KiwiTaskAPI.Services
             return await _context.tasks.FirstOrDefaultAsync(n => n.id == taskId);
         }
 
-        public async Task<IEnumerable<Tasks>> GetTasksAsync()
+        public async Task<(IEnumerable<Tasks>, int totalCount)> GetTasksAsync(int page_num, int page_size, string? title)
         {
-            return await _context.tasks.ToListAsync();
+            var query = _context.tasks.Include(t => t.categories).AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(title))
+            {
+                query = query.Where(t => t.title.Contains(title));
+            }
+            var totalCount = await query.CountAsync();
+
+            var tasks = await query.OrderByDescending(t => t.created_at)
+                                .Skip((page_num - 1) * page_size)
+                                .Take(page_size).ToListAsync();
+
+            return (tasks, totalCount);
         }
         public async Task<IEnumerable<Tasks>> GetFewTasksAsync()
         {

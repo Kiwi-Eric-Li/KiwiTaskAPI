@@ -6,7 +6,7 @@ namespace KiwiTaskAPI.Services
     public interface ITaskRepository
     {
         // get all tasks
-        Task<IEnumerable<Tasks>> GetTasksAsync();
+        Task<(IEnumerable<Tasks>, int totalCount)> GetTasksAsync(int page_num, int page_size, string? title);
         // get the first few tasks
         Task<IEnumerable<Tasks>> GetFewTasksAsync();
 

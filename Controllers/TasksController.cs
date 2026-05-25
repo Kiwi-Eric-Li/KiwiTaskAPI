@@ -23,9 +23,9 @@ namespace KiwiTaskAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllTasks()      // IActionResult returns a response of HTTP
+        public async Task<IActionResult> GetAllTasks([FromQuery] int page_num = 1, [FromQuery] int page_size = 10, [FromQuery] string? title = null)      // IActionResult returns a response of HTTP
         {
-            var tasksRepo = await _taskRepository.GetTasksAsync();
+            var (tasksRepo, totalCount) = await _taskRepository.GetTasksAsync(page_num, page_size, title);
             if(tasksRepo == null || tasksRepo.Count() < 0)
             {
                 return NotFound("There are no tasks.");
@@ -33,7 +33,14 @@ namespace KiwiTaskAPI.Controllers
             var tasksDtoRepo = _mapper.Map<IEnumerable<TasksDto>>(tasksRepo);
             return Ok(new { 
                 code = 0,
-                data = tasksDtoRepo
+                data = tasksDtoRepo,
+                pagination = new
+                {
+                    pageNum = page_num,
+                    pageSize = page_size,
+                    totalCount = totalCount,
+                    totalPages = (int)Math.Ceiling(totalCount / (double)page_size)
+                }
             });
         }
 

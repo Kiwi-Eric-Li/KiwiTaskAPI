@@ -19,6 +19,9 @@ namespace KiwiTaskAPI.Profiles
                 );
 
             CreateMap<TasksDto, Tasks>();
+
+            CreateMap<TaskCates, TaskCatesDto>();
+            CreateMap<TaskCatesDto, TaskCates>();
         }
     }
 }

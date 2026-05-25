@@ -28,7 +28,7 @@ namespace KiwiTaskAPI.Dtos
         public decimal? longitude { get; set; }
         public DateTime schedule_time { get; set; }
         public DateTime created_at { get; set; }
-        public ICollection<TaskCates> categories { get; set; }
+        public ICollection<TaskCatesDto> categories { get; set; }
         public ICollection<TaskAttachmentDto> task_attachments { get; set; }
     }
 }
