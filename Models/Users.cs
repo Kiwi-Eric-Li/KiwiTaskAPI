@@ -55,5 +55,8 @@ namespace KiwiTaskAPI.Models
 
         public UserPassword? user_password { get; set; }
 
+        public ICollection<Tasks> tasks { get; set; }
+
+
     }
 }

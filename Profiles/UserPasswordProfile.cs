@@ -9,6 +9,7 @@ namespace KiwiTaskAPI.Profiles
         public UserPasswordProfile()
         {
             CreateMap<UserPassword, RegisterDto>();
+            CreateMap<Users, UsersDto>();
         }
     }
 }

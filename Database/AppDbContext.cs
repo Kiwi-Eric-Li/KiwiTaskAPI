@@ -20,6 +20,7 @@ namespace KiwiTaskAPI.Database
         {
             modelBuilder.Entity<Users>().HasOne(u => u.user_password).WithOne(up => up.user).HasForeignKey<UserPassword>(up => up.user_id);
             modelBuilder.Entity<TaskCates>().HasOne(x => x.task).WithMany(x => x.categories).HasForeignKey(x => x.task_id);
+            modelBuilder.Entity<Tasks>().HasOne(x => x.poster).WithMany(x => x.tasks).HasForeignKey(x => x.poster_id);
         }
     }
 }

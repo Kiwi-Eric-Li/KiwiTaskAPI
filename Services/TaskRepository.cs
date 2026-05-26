@@ -27,7 +27,7 @@ namespace KiwiTaskAPI.Services
 
         public async Task<(IEnumerable<Tasks>, int totalCount)> GetTasksAsync(int page_num, int page_size, string? title)
         {
-            var query = _context.tasks.Include(t => t.categories).AsQueryable();
+            var query = _context.tasks.Include(t => t.categories).Include(u => u.poster).AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(title))
             {
@@ -59,6 +59,7 @@ namespace KiwiTaskAPI.Services
 
             taskEntity.created_at = DateTime.Now;
             taskEntity.updated_at = DateTime.Now;
+            taskEntity.status = "Open";
 
             using var transaction = await _context.Database.BeginTransactionAsync();
             // 1. save task

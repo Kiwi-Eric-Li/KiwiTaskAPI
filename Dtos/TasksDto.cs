@@ -30,5 +30,7 @@ namespace KiwiTaskAPI.Dtos
         public DateTime created_at { get; set; }
         public ICollection<TaskCatesDto> categories { get; set; }
         public ICollection<TaskAttachmentDto> task_attachments { get; set; }
+        public string status { get; set; }
+        public UsersDto poster { get; set; }
     }
 }
