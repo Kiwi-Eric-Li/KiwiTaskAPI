@@ -1,10 +1,13 @@
-﻿using KiwiTaskAPI.Dtos;
+﻿using AutoMapper;
+using KiwiTaskAPI.Dtos;
+using KiwiTaskAPI.Models;
 using KiwiTaskAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.CompilerServices;
+using System.Security.Claims;
 
 namespace KiwiTaskAPI.Controllers
 {
@@ -14,12 +17,38 @@ namespace KiwiTaskAPI.Controllers
     {
         private readonly IAuthServiceRepository _authRepository;
         private readonly IMailService _mail;
+        private readonly IMapper _mapper;
 
         
-        public AuthController(IAuthServiceRepository authRepository, IMailService mail)
+        public AuthController(IAuthServiceRepository authRepository, IMailService mail, IMapper mapper)
         {
             _authRepository = authRepository;
             _mail = mail;
+            _mapper = mapper;
+        }
+
+        [HttpGet("user-info")]
+        [Authorize]
+        public async Task<IActionResult> GetUserInfo()
+        {
+            // get current user's id
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var user = await _authRepository.GetUserInfo(Guid.Parse(userId));
+            if(user is null)
+            {
+                return Ok(new
+                {
+                    code = 1,
+                    message = "user not found"
+                });
+            }
+            var userDto = _mapper.Map<UsersDto>(user);
+            return Ok(new
+            {
+                code = 0,
+                data = userDto
+            });
         }
 
 

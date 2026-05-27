@@ -1,4 +1,5 @@
 ﻿using KiwiTaskAPI.Dtos;
+using KiwiTaskAPI.Models;
 
 namespace KiwiTaskAPI.Services
 {
@@ -9,5 +10,6 @@ namespace KiwiTaskAPI.Services
         Task<(object result, int statusCode)> LoginUserAsync(LoginDto dto);
         Task<bool> IsExistEmail(string email);
         Task<(object result, int statusCode)> RefreshTokenAsync(string refreshToken);
+        Task<Users> GetUserInfo(Guid user_id);
     }
 }

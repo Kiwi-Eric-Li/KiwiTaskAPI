@@ -170,5 +170,10 @@ namespace KiwiTaskAPI.Services
             }
             return (new { code = 0, access_token= access_token, refresh_token= user.refresh_token }, 200);
         }
+
+        public async Task<Users> GetUserInfo(Guid user_id)
+        {
+            return await _context.users.FirstOrDefaultAsync(u => u.id == user_id);
+        }
     }
 }

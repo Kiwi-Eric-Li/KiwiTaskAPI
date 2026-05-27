@@ -1,5 +1,6 @@
 ﻿using KiwiTaskAPI.Database;
 using KiwiTaskAPI.Dtos;
+using Microsoft.EntityFrameworkCore;
 
 namespace KiwiTaskAPI.Services
 {
@@ -29,10 +30,10 @@ namespace KiwiTaskAPI.Services
         //{
         //    var bounds = request.Bounds;
         //    bool isZeroBounds = bounds.West == 0 && bounds.East == 0 && bounds.South == 0 && bounds.North == 0;
-        //    bool isInvalid = 
+        //    bool isInvalid =
         //        Math.Abs(bounds.West) > 180 || Math.Abs(bounds.East) > 180 ||
         //        Math.Abs(bounds.South) > 90 || Math.Abs(bounds.North) > 90;
-        //    if(isZeroBounds || isInvalid)
+        //    if (isZeroBounds || isInvalid)
         //    {
         //        bounds = NzDefaultBounds;
         //    }
@@ -45,8 +46,18 @@ namespace KiwiTaskAPI.Services
         //    decimal east = (decimal)bounds.East;
         //    decimal north = (decimal)bounds.North;
 
-
-
+        //    var baseQuery = _context.tasks.AsNoTracking()
+        //        .Where(t => 
+        //            t.status == "Open" && 
+        //            t.task_type == 0 && 
+        //            t.expires_at > now && 
+        //            t.latitude.HasValue && 
+        //            t.longitude.HasValue &&
+        //            t.latitude >= south && 
+        //            t.latitude <= north &&
+        //            t.longitude >= west &&
+        //            t.longitude <= east
+        //        );
         //}
     }
 }
