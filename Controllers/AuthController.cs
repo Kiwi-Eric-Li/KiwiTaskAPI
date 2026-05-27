@@ -19,6 +19,7 @@ namespace KiwiTaskAPI.Controllers
         private readonly IMailService _mail;
         private readonly IMapper _mapper;
 
+
         
         public AuthController(IAuthServiceRepository authRepository, IMailService mail, IMapper mapper)
         {
@@ -114,6 +115,58 @@ namespace KiwiTaskAPI.Controllers
             }
             var (result, statusCode) = await _authRepository.RefreshTokenAsync(dto.refresh_token);
             return Ok(result);
+        }
+
+        [HttpPut("user-info")]
+        [Authorize]
+        public async Task<IActionResult> ModifyUserInfo([FromBody] UsersDto dto, [FromQuery] string flag)
+        {
+            // 1. validate if user_id is existed.
+            var result = await _authRepository.IsUserExist(dto.id);
+            if (!result)
+            {
+                return Ok(new
+                {
+                    code = 1,
+                    message = "user not found"
+                });
+            }
+            // 2. modify full name and bio
+            var resultNum = 0;
+            if(flag == "profile")
+            {
+                resultNum = await _authRepository.modifyUserInfo(dto);
+            }
+            else
+            {
+                resultNum = await _authRepository.modifyAccountDetail(dto);
+                if(resultNum == -1)
+                {
+                    return Ok(new
+                    {
+                        code = 1,
+                        message = "this email exists"
+                    });
+                }
+            }
+
+            if (resultNum > 0)
+            {
+                return Ok(new
+                {
+                    code = 0,
+                    message = "update successfully"
+                });
+            }
+            else
+            {
+                return Ok(new
+                {
+                    code = 1,
+                    message = "update failed"
+                });
+            }
+
         }
     }
 }

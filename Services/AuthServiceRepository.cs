@@ -58,7 +58,52 @@ namespace KiwiTaskAPI.Services
             return (token, expiry);
         }
 
+        public async Task<bool> IsUserExist(Guid user_id)
+        {
+            var user = await _context.users.FirstOrDefaultAsync(u => u.id == user_id);
+            if(user is null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
 
+        public async Task<int> modifyAccountDetail(UsersDto dto)
+        {
+            var user = await _context.users.FindAsync(dto.id);
+
+            // validate if new email exists
+            var userEmail = await _context.users.FirstOrDefaultAsync(t => t.email == dto.email);
+
+            if(userEmail is null || (userEmail is not null && userEmail.id == dto.id))
+            {
+                user.username = dto.username;
+                user.email = dto.email;
+
+                int resultNum = await _context.SaveChangesAsync();
+
+                return resultNum;
+            }
+            else
+            {
+                return -1;
+            }
+        }
+
+        public async Task<int> modifyUserInfo(UsersDto dto)
+        {
+            var user = await _context.users.FindAsync(dto.id);
+            user.bio = dto.bio;
+            user.firstname = dto.firstname;
+            user.lastname = dto.lastname;
+
+            int resultNum = await _context.SaveChangesAsync();
+
+            return resultNum;
+        }
 
         public async Task<(bool success, string token, string userName)> IsEmailValidAsync(string email)
         {
