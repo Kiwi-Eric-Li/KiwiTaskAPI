@@ -71,7 +71,27 @@ namespace KiwiTaskAPI.Services
             }
         }
 
-        public async Task<int> modifyAccountDetail(UsersDto dto)
+        public async Task<int> modifyPasswordAsync(ModifyPasswordDto dto)
+        {
+            // validate whether or not user exists
+            var user = await _context.users.Include(t => t.user_password).FirstOrDefaultAsync(t => t.id == dto.id);
+            if(user is null)
+            {
+                return -1;
+            }
+
+            // validate whether or not old password is correct
+            var isCorrect = BCrypt.Net.BCrypt.Verify(dto.current_pwd,user.user_password.password_hash);
+            if (!isCorrect)
+            {
+                return -2;
+            }
+            user.user_password.password_hash = BCrypt.Net.BCrypt.HashPassword(dto.new_pwd);
+            int result = await _context.SaveChangesAsync();
+            return result;
+        }
+
+        public async Task<int> modifyAccountDetailAsync(UsersDto dto)
         {
             var user = await _context.users.FindAsync(dto.id);
 
@@ -93,7 +113,7 @@ namespace KiwiTaskAPI.Services
             }
         }
 
-        public async Task<int> modifyUserInfo(UsersDto dto)
+        public async Task<int> modifyUserInfoAsync(UsersDto dto)
         {
             var user = await _context.users.FindAsync(dto.id);
             user.bio = dto.bio;
@@ -173,8 +193,6 @@ namespace KiwiTaskAPI.Services
                 await _context.SaveChangesAsync();
             }
 
-
-
             return (new
             {
                 code = 0,
@@ -216,7 +234,7 @@ namespace KiwiTaskAPI.Services
             return (new { code = 0, access_token= access_token, refresh_token= user.refresh_token }, 200);
         }
 
-        public async Task<Users> GetUserInfo(Guid user_id)
+        public async Task<Users> GetUserInfoAsync(Guid user_id)
         {
             return await _context.users.FirstOrDefaultAsync(u => u.id == user_id);
         }

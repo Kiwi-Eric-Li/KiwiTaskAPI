@@ -35,7 +35,7 @@ namespace KiwiTaskAPI.Controllers
             // get current user's id
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            var user = await _authRepository.GetUserInfo(Guid.Parse(userId));
+            var user = await _authRepository.GetUserInfoAsync(Guid.Parse(userId));
             if(user is null)
             {
                 return Ok(new
@@ -69,6 +69,39 @@ namespace KiwiTaskAPI.Controllers
                
             }
             return Ok();
+        }
+
+        [HttpPut("modify-password")]
+        [Authorize]
+        public async Task<IActionResult> ModifyPassword([FromBody] ModifyPasswordDto dto)
+        {
+
+            int result = await _authRepository.modifyPasswordAsync(dto);
+
+            if(result == -1)
+            {
+                return Ok(new
+                {
+                    code = -1,
+                    message = "the user is not found"
+                });
+            }
+            else if(result == -2)
+            {
+                return Ok(new
+                {
+                    code = -2,
+                    message = "the old password is not correct"
+                });
+            }
+            else
+            {
+                return Ok(new
+                {
+                    code = 0,
+                    message = "password is modified successfully"
+                });
+            }
         }
 
         [HttpPost("register")]
@@ -135,11 +168,11 @@ namespace KiwiTaskAPI.Controllers
             var resultNum = 0;
             if(flag == "profile")
             {
-                resultNum = await _authRepository.modifyUserInfo(dto);
+                resultNum = await _authRepository.modifyUserInfoAsync(dto);
             }
             else
             {
-                resultNum = await _authRepository.modifyAccountDetail(dto);
+                resultNum = await _authRepository.modifyAccountDetailAsync(dto);
                 if(resultNum == -1)
                 {
                     return Ok(new

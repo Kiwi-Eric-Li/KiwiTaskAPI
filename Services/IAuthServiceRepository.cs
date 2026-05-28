@@ -11,8 +11,9 @@ namespace KiwiTaskAPI.Services
         Task<(object result, int statusCode)> LoginUserAsync(LoginDto dto);
         Task<bool> IsExistEmail(string email);
         Task<(object result, int statusCode)> RefreshTokenAsync(string refreshToken);
-        Task<Users> GetUserInfo(Guid user_id);
-        Task<int> modifyUserInfo(UsersDto dto);
-        Task<int> modifyAccountDetail(UsersDto dto);
+        Task<Users> GetUserInfoAsync(Guid user_id);
+        Task<int> modifyUserInfoAsync(UsersDto dto);
+        Task<int> modifyAccountDetailAsync(UsersDto dto);
+        Task<int> modifyPasswordAsync(ModifyPasswordDto dto);
     }
 }
