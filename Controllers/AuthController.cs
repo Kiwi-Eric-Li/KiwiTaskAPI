@@ -52,6 +52,31 @@ namespace KiwiTaskAPI.Controllers
             });
         }
 
+        [HttpGet("preferred-category")]
+        [Authorize]
+        public async Task<IActionResult> GetUserPreferredCategory()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            List<PreferredCategories> list = await _authRepository.GetUserPreferredCategories(Guid.Parse(userId));
+            return Ok(new
+            {
+                code = 0,
+                data = list
+            });
+        }
+
+        [HttpPut("preferred-category")]
+        [Authorize]
+        public async Task<IActionResult> ModifyUserPreferredCategory([FromBody] List<PreferredCategories> preferredCategoriesList)
+        {
+            var count = await _authRepository.ModifyUserPreferredCategories(preferredCategoriesList);
+            return Ok(new
+            {
+                code = 0,
+                count = count
+            });
+        }
+
 
         [HttpPost("forget-password")]
         [AllowAnonymous]

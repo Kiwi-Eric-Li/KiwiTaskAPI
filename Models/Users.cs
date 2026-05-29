@@ -57,6 +57,8 @@ namespace KiwiTaskAPI.Models
 
         public ICollection<Tasks> tasks { get; set; }
 
+        public ICollection<PreferredCategories> preferred_categories { get; set; }
+
 
     }
 }

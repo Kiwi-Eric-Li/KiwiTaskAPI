@@ -238,5 +238,10 @@ namespace KiwiTaskAPI.Services
         {
             return await _context.users.FirstOrDefaultAsync(u => u.id == user_id);
         }
+
+        public async Task<List<PreferredCategories>> GetUserPreferredCategories(Guid user_id)
+        {
+            return await _context.preferred_categories.Where(p => p.user_id == user_id).ToListAsync();
+        }
     }
 }

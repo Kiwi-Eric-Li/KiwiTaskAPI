@@ -22,23 +22,36 @@ namespace KiwiTaskAPI.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
-            
-
-            modelBuilder.Entity("KiwiTaskAPI.Models.TaskCates", b =>
+            modelBuilder.Entity("KiwiTaskAPI.Models.PreferredCategories", b =>
                 {
-                    b.Property<string>("id")
-                        .HasColumnType("varchar(255)");
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("task_id")
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<int>("category_id")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("user_id")
                         .HasColumnType("char(36)");
-
-                    b.Property<string>("title")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.HasKey("id");
 
-                    b.ToTable("task_cates");
+                    b.HasIndex("user_id");
+
+                    b.ToTable("preferred_categories");
+                });
+
+            modelBuilder.Entity("KiwiTaskAPI.Models.PreferredCategories", b =>
+                {
+                    b.HasOne("KiwiTaskAPI.Models.Users", "user")
+                        .WithMany("preferred_categories")
+                        .HasForeignKey("user_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("user");
                 });
 
 #pragma warning restore 612, 618

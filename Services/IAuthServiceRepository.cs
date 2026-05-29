@@ -15,5 +15,8 @@ namespace KiwiTaskAPI.Services
         Task<int> modifyUserInfoAsync(UsersDto dto);
         Task<int> modifyAccountDetailAsync(UsersDto dto);
         Task<int> modifyPasswordAsync(ModifyPasswordDto dto);
+
+        Task<List<PreferredCategories>> GetUserPreferredCategories(Guid user_id);
+        Task<int> ModifyUserPreferredCategories(List<PreferredCategories> preferredCategoriesList);
     }
 }
