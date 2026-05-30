@@ -243,5 +243,37 @@ namespace KiwiTaskAPI.Services
         {
             return await _context.preferred_categories.Where(p => p.user_id == user_id).ToListAsync();
         }
+
+        public async Task<int> ModifyUserPreferredCategories(List<PreferredCategories> preferredCategoriesList)
+        {
+            if(preferredCategoriesList == null || !preferredCategoriesList.Any())
+            {
+                return 0;
+            }
+            var user_id = preferredCategoriesList.First().user_id;
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+
+            try
+            {
+                // search old data
+                var oldCategories = await _context.preferred_categories.Where(x => x.user_id == user_id).ToListAsync();
+                // delete old data
+                _context.preferred_categories.RemoveRange(oldCategories);
+                // save delete operation
+                await _context.SaveChangesAsync();
+                // add new data
+                await _context.preferred_categories.AddRangeAsync(preferredCategoriesList);
+                // save new operation
+                var result = await _context.SaveChangesAsync();
+                // submit transaction
+                await transaction.CommitAsync();
+                return result;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
     }
 }
