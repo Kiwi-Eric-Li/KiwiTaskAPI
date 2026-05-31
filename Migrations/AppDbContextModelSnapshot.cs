@@ -22,7 +22,7 @@ namespace KiwiTaskAPI.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
-            modelBuilder.Entity("KiwiTaskAPI.Models.PreferredCategories", b =>
+            modelBuilder.Entity("KiwiTaskAPI.Models.NotificationSettings", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -30,7 +30,13 @@ namespace KiwiTaskAPI.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("id"));
 
-                    b.Property<int>("category_id")
+                    b.Property<int>("app_enabled")
+                        .HasColumnType("int");
+
+                    b.Property<int>("email_enabled")
+                        .HasColumnType("int");
+
+                    b.Property<int>("marketing_opt")
                         .HasColumnType("int");
 
                     b.Property<Guid>("user_id")
@@ -38,22 +44,34 @@ namespace KiwiTaskAPI.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("user_id");
+                    b.HasIndex("user_id")
+                        .IsUnique();
 
-                    b.ToTable("preferred_categories");
+                    b.ToTable("notification_settings");
                 });
 
-            modelBuilder.Entity("KiwiTaskAPI.Models.PreferredCategories", b =>
+
+            modelBuilder.Entity("KiwiTaskAPI.Models.NotificationSettings", b =>
                 {
                     b.HasOne("KiwiTaskAPI.Models.Users", "user")
-                        .WithMany("preferred_categories")
-                        .HasForeignKey("user_id")
+                        .WithOne("notification_settings")
+                        .HasForeignKey("KiwiTaskAPI.Models.NotificationSettings", "user_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("user");
                 });
 
+            modelBuilder.Entity("KiwiTaskAPI.Models.Users", b =>
+                {
+                    b.Navigation("notification_settings");
+
+                    b.Navigation("preferred_categories");
+
+                    b.Navigation("tasks");
+
+                    b.Navigation("user_password");
+                });
 #pragma warning restore 612, 618
         }
     }

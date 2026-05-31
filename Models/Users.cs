@@ -59,6 +59,8 @@ namespace KiwiTaskAPI.Models
 
         public ICollection<PreferredCategories> preferred_categories { get; set; }
 
+        public NotificationSettings notification_settings { get; set; }
+
 
     }
 }
