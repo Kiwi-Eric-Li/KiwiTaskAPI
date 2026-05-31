@@ -161,14 +161,39 @@ namespace KiwiTaskAPI.Services
                 created_at = DateTime.UtcNow,
                 updated_at = DateTime.UtcNow
             };
-            _context.user_password.Add(user_password);
-            _context.users.Add(user);
-            await _context.SaveChangesAsync();
 
-            return (new { 
-                code= 0,
-                message= "register sucessfully"
-            }, 200);
+            var notification_settings = new NotificationSettings
+            {
+                user_id = user_id,
+                app_enabled = 1,
+                email_enabled = 1,
+                marketing_opt = 1
+            };
+
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                _context.user_password.Add(user_password);
+                _context.users.Add(user);
+                _context.notification_settings.Add(notification_settings);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return (new
+                {
+                    code = 0,
+                    message = "register sucessfully"
+                }, 200);
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                return (new
+                {
+                    code = 1,
+                    message = "register failed"
+                }, 200);
+            }
+
         }
 
         public async Task<bool> IsExistEmail(string email)
@@ -242,6 +267,25 @@ namespace KiwiTaskAPI.Services
         public async Task<List<PreferredCategories>> GetUserPreferredCategories(Guid user_id)
         {
             return await _context.preferred_categories.Where(p => p.user_id == user_id).ToListAsync();
+        }
+
+        public async Task<int> ModifyNotificationSettings(Guid userId, Dictionary<string, int> data)
+        {
+            var settings = await _context.notification_settings.FirstOrDefaultAsync(x => x.user_id == userId);
+
+            foreach (var item in data)
+            {
+                var property = typeof(NotificationSettings).GetProperty(item.Key);
+
+                if (property != null &&
+                    property.PropertyType == typeof(int))
+                {
+                    property.SetValue(settings, item.Value);
+                }
+
+            }
+
+            return await _context.SaveChangesAsync();
         }
 
         public async Task<int> ModifyUserPreferredCategories(List<PreferredCategories> preferredCategoriesList)

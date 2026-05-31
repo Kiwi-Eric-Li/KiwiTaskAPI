@@ -77,6 +77,19 @@ namespace KiwiTaskAPI.Controllers
             });
         }
 
+        [HttpPut("notification-settings")]
+        [Authorize]
+        public async Task<IActionResult> SetNotificationSettings([FromBody] Dictionary<string, int> data)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var result = await _authRepository.ModifyNotificationSettings(Guid.Parse(userId), data);
+
+            return Ok(new
+            {
+                code = 0,
+                data = result
+            });
+        }
 
         [HttpPost("forget-password")]
         [AllowAnonymous]

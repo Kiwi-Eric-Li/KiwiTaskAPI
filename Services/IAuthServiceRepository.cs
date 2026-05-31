@@ -18,5 +18,6 @@ namespace KiwiTaskAPI.Services
 
         Task<List<PreferredCategories>> GetUserPreferredCategories(Guid user_id);
         Task<int> ModifyUserPreferredCategories(List<PreferredCategories> preferredCategoriesList);
+        Task<int> ModifyNotificationSettings(Guid userId, Dictionary<string, int> data);
     }
 }
