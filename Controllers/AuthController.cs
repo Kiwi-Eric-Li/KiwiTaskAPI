@@ -91,6 +91,29 @@ namespace KiwiTaskAPI.Controllers
             });
         }
 
+        [HttpGet("notification-settings")]
+        [Authorize]
+        public async Task<IActionResult> GetNotificationSettings([FromQuery] Guid user_id)
+        {
+            var notification_settings = await _authRepository.GetNotificationSettings(user_id);
+            if(notification_settings is not null)
+            {
+                return Ok(new
+                {
+                    code = 0,
+                    data = notification_settings
+                });
+            }
+            else
+            {
+                return Ok(new
+                {
+                    code = 1
+                });
+            }
+            
+        }
+
         [HttpPost("forget-password")]
         [AllowAnonymous]
         public async Task<IActionResult> ForgetPassword([FromBody] EmailDto dto)

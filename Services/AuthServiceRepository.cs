@@ -288,6 +288,12 @@ namespace KiwiTaskAPI.Services
             return await _context.SaveChangesAsync();
         }
 
+        public async Task<NotificationSettings> GetNotificationSettings(Guid user_id)
+        {
+            var settings = await _context.notification_settings.Where(s => s.user_id == user_id).FirstOrDefaultAsync();
+            return settings;
+        }
+
         public async Task<int> ModifyUserPreferredCategories(List<PreferredCategories> preferredCategoriesList)
         {
             if(preferredCategoriesList == null || !preferredCategoriesList.Any())
