@@ -12,7 +12,7 @@ namespace KiwiTaskAPI.Services
         Task<bool> IsExistEmail(string email);
         Task<(object result, int statusCode)> RefreshTokenAsync(string refreshToken);
         Task<Users> GetUserInfoAsync(Guid user_id);
-        Task<int> modifyUserInfoAsync(UsersDto dto);
+        Task<int> modifyUserInfoAsync(UsersDto dto, bool flag);
         Task<int> modifyAccountDetailAsync(UsersDto dto);
         Task<int> modifyPasswordAsync(ModifyPasswordDto dto);
 

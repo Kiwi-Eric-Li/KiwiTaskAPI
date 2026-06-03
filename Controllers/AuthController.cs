@@ -213,9 +213,34 @@ namespace KiwiTaskAPI.Controllers
             return Ok(result);
         }
 
+        [HttpPut("user-account")]
+        [Authorize]
+        public async Task<IActionResult> ModifyUserAccount([FromBody] UsersDto dto)
+        {
+            var resultNum = 0;
+            resultNum = await _authRepository.modifyAccountDetailAsync(dto);
+
+            if (resultNum > 0)
+            {
+                return Ok(new
+                {
+                    code = 0,
+                    message = "update successfully"
+                });
+            }
+            else
+            {
+                return Ok(new
+                {
+                    code = 1,
+                    message = "update failed"
+                });
+            }
+        }
+
         [HttpPut("user-info")]
         [Authorize]
-        public async Task<IActionResult> ModifyUserInfo([FromForm] UpdateProfileRequest dto, [FromQuery] string flag)
+        public async Task<IActionResult> ModifyUserInfo([FromForm] UpdateProfileRequest dto)
         {
             // 1. validate if user_id is existed.
             var result = await _authRepository.IsUserExist(dto.id);
@@ -227,54 +252,42 @@ namespace KiwiTaskAPI.Controllers
                     message = "user not found"
                 });
             }
-            Console.WriteLine(dto.avatar.FileName);
 
-            // var newUrl = await _oss.UploadAvatarAsync(dto.avatar.OpenReadStream(), dto.avatar.FileName);
-            // Console.WriteLine(newUrl);
+            var userDto = new UsersDto();
+            userDto.id = dto.id;
+            userDto.bio = dto.bio;
+            userDto.firstname = dto.firstname;
+            userDto.lastname = dto.lastname;
 
-            return Ok(new
+            var resultNum = 0;
+
+            if (dto.avatar is not null)
             {
-                code = 0,
-                message = ""
-            });
+                var newUrl = await _oss.UploadAvatarAsync(dto.avatar.OpenReadStream(), dto.avatar.FileName);
+                userDto.avatar_url = newUrl;
+                resultNum = await _authRepository.modifyUserInfoAsync(userDto, true);
+            }
+            else
+            {
+                resultNum = await _authRepository.modifyUserInfoAsync(userDto, false);
+            }
 
-
-            // 2. modify full name and bio
-            //var resultNum = 0;
-            //if(flag == "profile")
-            //{
-            //    resultNum = await _authRepository.modifyUserInfoAsync(dto);
-            //}
-            //else
-            //{
-            //    resultNum = await _authRepository.modifyAccountDetailAsync(dto);
-            //    if(resultNum == -1)
-            //    {
-            //        return Ok(new
-            //        {
-            //            code = 1,
-            //            message = "this email exists"
-            //        });
-            //    }
-            //}
-
-            //if (resultNum > 0)
-            //{
-            //    return Ok(new
-            //    {
-            //        code = 0,
-            //        message = "update successfully"
-            //    });
-            //}
-            //else
-            //{
-            //    return Ok(new
-            //    {
-            //        code = 1,
-            //        message = "update failed"
-            //    });
-            //}
-
+            if (resultNum > 0)
+            {
+                return Ok(new
+                {
+                    code = 0,
+                    message = "update successfully"
+                });
+            }
+            else
+            {
+                return Ok(new
+                {
+                    code = 1,
+                    message = "update failed"
+                });
+            }
         }
     }
 }

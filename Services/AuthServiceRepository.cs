@@ -113,12 +113,16 @@ namespace KiwiTaskAPI.Services
             }
         }
 
-        public async Task<int> modifyUserInfoAsync(UsersDto dto)
+        public async Task<int> modifyUserInfoAsync(UsersDto dto, bool flag)
         {
             var user = await _context.users.FindAsync(dto.id);
             user.bio = dto.bio;
             user.firstname = dto.firstname;
             user.lastname = dto.lastname;
+            if (flag)
+            {
+                user.avatar_url = dto.avatar_url;
+            }
 
             int resultNum = await _context.SaveChangesAsync();
 
