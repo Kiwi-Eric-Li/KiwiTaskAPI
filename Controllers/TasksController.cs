@@ -69,7 +69,21 @@ namespace KiwiTaskAPI.Controllers
                 return NotFound("This task cannot be found.");
             }
             var taskDto = _mapper.Map<TasksDto>(taskRepo);
-            return Ok(taskDto);
+            if(taskDto is not null)
+            {
+                return Ok(new
+                {
+                    code = 0,
+                    data = taskDto
+                });
+            }
+            else
+            {
+                return Ok(new
+                {
+                    code = 1
+                });
+            }
         }
 
         [HttpPost]

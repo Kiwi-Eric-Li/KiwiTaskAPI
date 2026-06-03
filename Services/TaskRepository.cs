@@ -22,7 +22,7 @@ namespace KiwiTaskAPI.Services
 
         public async Task<Tasks> GetTaskByIdAsync(Guid taskId)
         {
-            return await _context.tasks.FirstOrDefaultAsync(n => n.id == taskId);
+            return await _context.tasks.Include(t => t.categories).Include(p => p.poster).FirstOrDefaultAsync(n => n.id == taskId);
         }
 
         public async Task<(IEnumerable<Tasks>, int totalCount)> GetTasksAsync(int page_num, int page_size, string? title)

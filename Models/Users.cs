@@ -61,6 +61,8 @@ namespace KiwiTaskAPI.Models
 
         public NotificationSettings notification_settings { get; set; }
 
+        public ICollection<TaskOffers> offers { get; set; }
+
 
     }
 }

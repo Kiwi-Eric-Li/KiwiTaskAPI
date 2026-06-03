@@ -17,6 +17,7 @@ namespace KiwiTaskAPI.Database
         public DbSet<TaskCates> task_cates { get; set; }
         public DbSet<PreferredCategories> preferred_categories { get; set; }
         public DbSet<NotificationSettings> notification_settings { get; set; }
+        public DbSet<TaskOffers> take_offers { get; set; } 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -25,6 +26,7 @@ namespace KiwiTaskAPI.Database
             modelBuilder.Entity<Tasks>().HasOne(x => x.poster).WithMany(x => x.tasks).HasForeignKey(x => x.poster_id);
             modelBuilder.Entity<PreferredCategories>().HasOne(x => x.user).WithMany(x => x.preferred_categories).HasForeignKey(x => x.user_id);
             modelBuilder.Entity<Users>().HasOne(u => u.notification_settings).WithOne(u => u.user).HasForeignKey<NotificationSettings>(u => u.user_id);
+            modelBuilder.Entity<TaskOffers>().HasOne(u => u.user).WithMany(u => u.offers).HasForeignKey(o => o.user_id);
         }
     }
 }
