@@ -22,7 +22,10 @@ namespace KiwiTaskAPI.Models
         [Required]
         public DateTime expired_at { get; set; }
 
+        [ForeignKey(nameof(user_id))]
         public Users user { get; set; }
+        [ForeignKey(nameof(task_id))]
+        public Tasks task { get; set; }
 
     }
 }

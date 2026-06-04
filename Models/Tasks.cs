@@ -36,8 +36,6 @@ namespace KiwiTaskAPI.Models
         public decimal? longitude { get; set; }
         [Required]
         public DateTime schedule_time { get; set; }
-
-
         public virtual ICollection<TaskCates> categories { get; set; } = new List<TaskCates>();
         public virtual ICollection<TaskAttachment> task_attachments { get; set; } = new List<TaskAttachment>();  // 一个任务，会有多个附件
         [Required]
@@ -48,6 +46,8 @@ namespace KiwiTaskAPI.Models
         public string status { get; set; }
 
         public Users poster { get; set; }
+
+        public ICollection<TaskOffers> offers { get; set; } = new List<TaskOffers>();
 
     }
 }

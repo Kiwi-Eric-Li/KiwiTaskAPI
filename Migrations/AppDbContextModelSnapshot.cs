@@ -22,7 +22,7 @@ namespace KiwiTaskAPI.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
-            modelBuilder.Entity("KiwiTaskAPI.Models.NotificationSettings", b =>
+            modelBuilder.Entity("KiwiTaskAPI.Models.TaskOffers", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -30,32 +30,39 @@ namespace KiwiTaskAPI.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("id"));
 
-                    b.Property<int>("app_enabled")
-                        .HasColumnType("int");
+                    b.Property<string>("attachments")
+                        .HasColumnType("longtext");
 
-                    b.Property<int>("email_enabled")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("created_at")
+                        .HasColumnType("datetime(6)");
 
-                    b.Property<int>("marketing_opt")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("expired_at")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("message")
+                        .HasColumnType("text");
+
+                    b.Property<decimal>("price")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<Guid>("task_id")
+                        .HasColumnType("char(36)");
 
                     b.Property<Guid>("user_id")
                         .HasColumnType("char(36)");
 
                     b.HasKey("id");
 
-                    b.HasIndex("user_id")
-                        .IsUnique();
+                    b.HasIndex("user_id");
 
-                    b.ToTable("notification_settings");
+                    b.ToTable("take_offers");
                 });
 
-
-            modelBuilder.Entity("KiwiTaskAPI.Models.NotificationSettings", b =>
+            modelBuilder.Entity("KiwiTaskAPI.Models.TaskOffers", b =>
                 {
                     b.HasOne("KiwiTaskAPI.Models.Users", "user")
-                        .WithOne("notification_settings")
-                        .HasForeignKey("KiwiTaskAPI.Models.NotificationSettings", "user_id")
+                        .WithMany("offers")
+                        .HasForeignKey("user_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -64,13 +71,7 @@ namespace KiwiTaskAPI.Migrations
 
             modelBuilder.Entity("KiwiTaskAPI.Models.Users", b =>
                 {
-                    b.Navigation("notification_settings");
-
-                    b.Navigation("preferred_categories");
-
-                    b.Navigation("tasks");
-
-                    b.Navigation("user_password");
+                    b.Navigation("offers");
                 });
 #pragma warning restore 612, 618
         }
