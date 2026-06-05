@@ -1,4 +1,6 @@
-﻿using KiwiTaskAPI.Services;
+﻿using KiwiTaskAPI.Dtos;
+using KiwiTaskAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KiwiTaskAPI.Controllers
@@ -14,6 +16,16 @@ namespace KiwiTaskAPI.Controllers
             _taskMediaService = taskMediaService;
         }
 
+        [HttpPost("upload")]
+        [Authorize]
+        public async Task<IActionResult> Upload([FromForm] TaskMediaUploadDto dto)
+        {
+            foreach(var file in dto.Files)
+            {
+                Console.WriteLine(file.FileName);
+            }
+            return Ok();
+        }
 
     }
 }

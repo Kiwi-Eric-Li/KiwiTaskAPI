@@ -17,4 +17,6 @@
         string ContextType,
         long ContextId
     );
+
+    public record TaskMediaUploadDto(IFormFile[] Files);
 }
