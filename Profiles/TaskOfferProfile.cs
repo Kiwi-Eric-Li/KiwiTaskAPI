@@ -9,6 +9,7 @@ namespace KiwiTaskAPI.Profiles
         public TaskOfferProfile()
         {
             CreateMap<OfferCreateDto, TaskOffers>();
+            CreateMap<TaskOffers, TaskOffersDto>();
         }
     }
 }

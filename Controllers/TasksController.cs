@@ -63,12 +63,12 @@ namespace KiwiTaskAPI.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTaskById(Guid id)
         {
-            var taskRepo = await _taskRepository.GetTaskByIdAsync(id);
-            if(taskRepo == null)
+            var taskDto = await _taskRepository.GetTaskByIdAsync(id);
+            if(taskDto == null)
             {
                 return NotFound("This task cannot be found.");
             }
-            var taskDto = _mapper.Map<TasksDto>(taskRepo);
+            // var taskDto = _mapper.Map<TasksDto>(taskRepo);
             if(taskDto is not null)
             {
                 return Ok(new

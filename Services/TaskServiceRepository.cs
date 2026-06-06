@@ -1,28 +1,31 @@
 ﻿
 
 
+using AutoMapper;
 using KiwiTaskAPI.Database;
 using KiwiTaskAPI.Dtos;
 using KiwiTaskAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace KiwiTaskAPI.Services
 {
     public class TaskServiceRepository : ITaskService
     {
-        // private List<Tasks> _tasks;    // mock数据
         private readonly AppDbContext _context;
-
-        public TaskServiceRepository(AppDbContext context)
+        private readonly IMapper _mapper;
+        public TaskServiceRepository(AppDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
 
-        public async Task<Tasks> GetTaskByIdAsync(Guid taskId)
+        public async Task<TasksDto> GetTaskByIdAsync(Guid taskId)
         {
-            return await _context.tasks.Include(t => t.categories).Include(p => p.poster).Include(o => o.offers).FirstOrDefaultAsync(n => n.id == taskId);
+            var task = await _context.tasks.Include(t => t.categories).Include(p => p.poster).Include(o => o.offers).FirstOrDefaultAsync(n => n.id == taskId);
+            return _mapper.Map<TasksDto>(task);
         }
 
         public async Task<(IEnumerable<Tasks>, int totalCount)> GetTasksAsync(int page_num, int page_size, string? title)

@@ -12,7 +12,8 @@ namespace KiwiTaskAPI.Models
         public string title { get; set; }
         [Required]
         public Guid task_id { get; set; }
-        
+        [ForeignKey(nameof(task_id))]
+        [JsonIgnore]
         public Tasks task { get; set; }
     }
 }

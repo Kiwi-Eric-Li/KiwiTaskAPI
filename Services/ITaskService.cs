@@ -11,7 +11,7 @@ namespace KiwiTaskAPI.Services
         Task<IEnumerable<Tasks>> GetFewTasksAsync();
 
         // get a task by task_id
-        Task<Tasks> GetTaskByIdAsync(Guid taskId);
+        Task<TasksDto> GetTaskByIdAsync(Guid taskId);
         Task<int> CreateTaskAsync(Tasks taskEntity);
 
         
