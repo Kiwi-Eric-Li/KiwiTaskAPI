@@ -9,12 +9,12 @@ using System.Text.Json;
 
 namespace KiwiTaskAPI.Services
 {
-    public class TaskRepository : ITaskRepository
+    public class TaskServiceRepository : ITaskService
     {
         // private List<Tasks> _tasks;    // mock数据
         private readonly AppDbContext _context;
 
-        public TaskRepository(AppDbContext context)
+        public TaskServiceRepository(AppDbContext context)
         {
             _context = context;
         }

@@ -2,7 +2,7 @@
 
 namespace KiwiTaskAPI.Services
 {
-    public interface ITaskCategoryRepository
+    public interface ITaskCategory
     {
         // get all task categories
         Task<IEnumerable<TaskCategory>> GetTaskCategoriesAsync();

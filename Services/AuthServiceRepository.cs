@@ -12,7 +12,7 @@ using System.Text.Json;
 
 namespace KiwiTaskAPI.Services
 {
-    public class AuthServiceRepository : IAuthServiceRepository
+    public class AuthServiceRepository : IAuthService
     {
         private readonly AppDbContext _context;
         private readonly IConfiguration _configuration;

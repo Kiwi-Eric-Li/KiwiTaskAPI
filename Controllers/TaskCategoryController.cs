@@ -10,10 +10,10 @@ namespace KiwiTaskAPI.Controllers
     [ApiController]
     public class TaskCategoryController : ControllerBase
     {
-        private ITaskCategoryRepository _taskCategoryRepository;
+        private ITaskCategory _taskCategoryRepository;
         private readonly IMapper _mapper;
         
-        public TaskCategoryController(ITaskCategoryRepository taskCategoryRepository, IMapper mapper)
+        public TaskCategoryController(ITaskCategory taskCategoryRepository, IMapper mapper)
         {
             _taskCategoryRepository = taskCategoryRepository;
             _mapper = mapper;

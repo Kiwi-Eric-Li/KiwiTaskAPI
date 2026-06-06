@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KiwiTaskAPI.Services
 {
-    public class TaskCategoryRepository : ITaskCategoryRepository
+    public class TaskCategoryRepository : ITaskCategory
     {
         private readonly AppDbContext _context;
 

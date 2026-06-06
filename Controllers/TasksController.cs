@@ -13,10 +13,10 @@ namespace KiwiTaskAPI.Controllers
     [ApiController]
     public class TasksController : ControllerBase
     {
-        private ITaskRepository _taskRepository;
+        private ITaskService _taskRepository;
         private readonly IMapper _mapper;
 
-        public TasksController(ITaskRepository taskRepository, IMapper mapper)
+        public TasksController(ITaskService taskRepository, IMapper mapper)
         {
             _taskRepository = taskRepository;
             _mapper = mapper;

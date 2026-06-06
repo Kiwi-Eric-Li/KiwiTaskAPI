@@ -16,12 +16,13 @@ namespace KiwiTaskAPI
             var builder = WebApplication.CreateBuilder(args);
 
             // 把一个接口和它的实现类注册到容器中
-            builder.Services.AddScoped<ITaskRepository, TaskRepository>();
-            builder.Services.AddScoped<IAuthServiceRepository, AuthServiceRepository>();
+            builder.Services.AddScoped<ITaskService, TaskServiceRepository>();
+            builder.Services.AddScoped<IAuthService, AuthServiceRepository>();
             builder.Services.AddScoped<IMailService, MailServiceRepository>();
-            builder.Services.AddScoped<ITaskCategoryRepository, TaskCategoryRepository>();
+            builder.Services.AddScoped<ITaskCategory, TaskCategoryRepository>();
             builder.Services.AddScoped<IOssService, OssServiceRepository>();
             builder.Services.AddScoped<ITaskMediaService, TaskMediaServiceRepository>();
+            builder.Services.AddScoped<IOfferService, OfferServiceRepository>();
 
             builder.Services.AddHttpClient<IPlaceService, PlaceServiceRepository>(client =>
             {

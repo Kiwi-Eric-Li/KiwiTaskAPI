@@ -3,7 +3,7 @@ using KiwiTaskAPI.Models;
 
 namespace KiwiTaskAPI.Services
 {
-    public interface ITaskRepository
+    public interface ITaskService
     {
         // get all tasks
         Task<(IEnumerable<Tasks>, int totalCount)> GetTasksAsync(int page_num, int page_size, string? title);

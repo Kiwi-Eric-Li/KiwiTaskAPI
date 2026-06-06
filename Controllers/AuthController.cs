@@ -16,13 +16,13 @@ namespace KiwiTaskAPI.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IOssService _oss;
-        private readonly IAuthServiceRepository _authRepository;
+        private readonly IAuthService _authRepository;
         private readonly IMailService _mail;
         private readonly IMapper _mapper;
 
 
         
-        public AuthController(IOssService oss, IAuthServiceRepository authRepository, IMailService mail, IMapper mapper)
+        public AuthController(IOssService oss, IAuthService authRepository, IMailService mail, IMapper mapper)
         {
             _oss = oss;
             _authRepository = authRepository;

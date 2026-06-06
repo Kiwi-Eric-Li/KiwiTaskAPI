@@ -3,7 +3,7 @@ using KiwiTaskAPI.Models;
 
 namespace KiwiTaskAPI.Services
 {
-    public interface IAuthServiceRepository
+    public interface IAuthService
     {
         Task<bool> IsUserExist(Guid user_id);
         Task<(bool success, string token, string userName)> IsEmailValidAsync(string email);

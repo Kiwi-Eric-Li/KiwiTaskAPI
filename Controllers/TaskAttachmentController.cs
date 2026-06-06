@@ -8,10 +8,10 @@ namespace KiwiTaskAPI.Controllers
     [ApiController]
     public class TaskAttachmentController: ControllerBase
     {
-        private ITaskRepository _taskRepository;
+        private ITaskService _taskRepository;
         private IMapper _mapper;
 
-        public TaskAttachmentController(ITaskRepository taskRepository, IMapper mapper)
+        public TaskAttachmentController(ITaskService taskRepository, IMapper mapper)
         {
             _taskRepository = taskRepository;
             _mapper = mapper;
