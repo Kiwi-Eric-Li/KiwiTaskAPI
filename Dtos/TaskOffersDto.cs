@@ -11,5 +11,10 @@
         public DateTime created_at { get; set; }
         public DateTime expired_at { get; set; }
 
+        public UsersDto user { get; set; }
+
+        public bool is_expired { get; set; }
+        public bool is_matched { get; set; }
+
     }
 }

@@ -9,7 +9,10 @@ namespace KiwiTaskAPI.Profiles
         public TaskOfferProfile()
         {
             CreateMap<OfferCreateDto, TaskOffers>();
-            CreateMap<TaskOffers, TaskOffersDto>();
+            CreateMap<TaskOffers, TaskOffersDto>().ForMember(
+                dest => dest.is_expired,
+                opt => opt.MapFrom(src => src.expired_at <= DateTime.UtcNow)
+            );
         }
     }
 }

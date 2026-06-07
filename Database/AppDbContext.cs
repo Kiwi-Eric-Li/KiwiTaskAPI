@@ -17,7 +17,8 @@ namespace KiwiTaskAPI.Database
         public DbSet<TaskCates> task_cates { get; set; }
         public DbSet<PreferredCategories> preferred_categories { get; set; }
         public DbSet<NotificationSettings> notification_settings { get; set; }
-        public DbSet<TaskOffers> task_offers { get; set; } 
+        public DbSet<TaskOffers> task_offers { get; set; }
+        public DbSet<TaskMatches> task_matches { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
