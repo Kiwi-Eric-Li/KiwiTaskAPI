@@ -24,6 +24,16 @@ namespace KiwiTaskAPI.Services
             return await _context.task_offers.Where(t => t.task_id == taskid).ToListAsync();
         }
 
+        public async Task<IEnumerable<TaskOffers>> GetTaskOffersByTaskIdAsync(Guid taskid)
+        {
+            var offers = await _context.task_offers.Include(u => u.user).Where(t => t.task_id == taskid).ToListAsync();
+            if(offers is not null)
+            {
+                offers = offers.GroupBy(o => o.user_id).Select(g => g.OrderByDescending(o => o.created_at).First()).ToList();
+            }
+            return offers;
+        }
+
 
         public async Task<int> CreateOfferAsync(Guid taskid, Guid userid, OfferCreateDto dto)
         {

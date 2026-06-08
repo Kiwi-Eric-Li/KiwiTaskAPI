@@ -22,7 +22,9 @@ namespace KiwiTaskAPI.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
-            modelBuilder.Entity("KiwiTaskAPI.Models.TaskOffers", b =>
+            
+
+            modelBuilder.Entity("KiwiTaskAPI.Models.TaskMatches", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -30,20 +32,14 @@ namespace KiwiTaskAPI.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("id"));
 
-                    b.Property<string>("attachments")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime>("created_at")
+                    b.Property<DateTime>("confirm_expires")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime>("expired_at")
+                    b.Property<int>("confirmed")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("matched_at")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<string>("message")
-                        .HasColumnType("text");
-
-                    b.Property<decimal>("price")
-                        .HasColumnType("decimal(10,2)");
 
                     b.Property<Guid>("task_id")
                         .HasColumnType("char(36)");
@@ -53,26 +49,9 @@ namespace KiwiTaskAPI.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("user_id");
-
-                    b.ToTable("take_offers");
+                    b.ToTable("task_matches");
                 });
 
-            modelBuilder.Entity("KiwiTaskAPI.Models.TaskOffers", b =>
-                {
-                    b.HasOne("KiwiTaskAPI.Models.Users", "user")
-                        .WithMany("offers")
-                        .HasForeignKey("user_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("user");
-                });
-
-            modelBuilder.Entity("KiwiTaskAPI.Models.Users", b =>
-                {
-                    b.Navigation("offers");
-                });
 #pragma warning restore 612, 618
         }
     }

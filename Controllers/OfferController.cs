@@ -1,4 +1,5 @@
-﻿using KiwiTaskAPI.Dtos;
+﻿using AutoMapper;
+using KiwiTaskAPI.Dtos;
 using KiwiTaskAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,9 +12,11 @@ namespace KiwiTaskAPI.Controllers
     public class OfferController : ControllerBase
     {
         private readonly IOfferService _offerService;
-        public OfferController(IOfferService offerService)
+        private readonly IMapper _mapper;
+        public OfferController(IOfferService offerService, IMapper mapper)
         {
             _offerService = offerService;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -27,6 +30,30 @@ namespace KiwiTaskAPI.Controllers
                 data = result
             });
         }
+
+        [HttpGet("refetch")]
+        [Authorize]
+        public async Task<IActionResult> GetOfferListByTaskId(Guid taskid)
+        {
+            var taskOffers = await _offerService.GetTaskOffersByTaskIdAsync(taskid);
+            if(taskOffers is not null)
+            {
+                return Ok(new
+                {
+                    code = 0,
+                    data = _mapper.Map<List<TaskOffersDto>>(taskOffers)
+                });
+            }
+            else
+            {
+                return Ok(new
+                {
+                    code = 0,
+                    data = Array.Empty<TaskOffersDto>()
+                });
+            }
+        }
+
 
         [HttpPost]
         [Authorize]
