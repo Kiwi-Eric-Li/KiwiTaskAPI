@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using KiwiTaskAPI.Hubs;
 
 namespace KiwiTaskAPI
 {
@@ -81,6 +82,9 @@ namespace KiwiTaskAPI
 
             builder.Services.AddAuthorization();
 
+            // signalR
+            builder.Services.AddSignalR();
+
             // CORS
 
             builder.Services.AddCors(o =>
@@ -90,6 +94,9 @@ namespace KiwiTaskAPI
             
 
             var app = builder.Build();
+
+
+            app.MapHub<TaskNotificationsHub>("/hubs/task-notifications").RequireCors("Frontend");
 
             app.UseCors("Frontend");
             app.UseAuthentication();

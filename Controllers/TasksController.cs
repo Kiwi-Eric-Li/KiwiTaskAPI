@@ -30,10 +30,10 @@ namespace KiwiTaskAPI.Controllers
             {
                 return NotFound("There are no tasks.");
             }
-            var tasksDtoRepo = _mapper.Map<IEnumerable<TasksDto>>(tasksRepo);
+            // var tasksDtoRepo = _mapper.Map<IEnumerable<TasksDto>>(tasksRepo);
             return Ok(new { 
                 code = 0,
-                data = tasksDtoRepo,
+                data = tasksRepo,
                 pagination = new
                 {
                     pageNum = page_num,

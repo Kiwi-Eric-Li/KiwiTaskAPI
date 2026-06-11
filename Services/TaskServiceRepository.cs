@@ -15,6 +15,7 @@ namespace KiwiTaskAPI.Services
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
+        
         public TaskServiceRepository(AppDbContext context, IMapper mapper)
         {
             _context = context;
@@ -32,21 +33,69 @@ namespace KiwiTaskAPI.Services
             return _mapper.Map<TasksDto>(task);
         }
 
-        public async Task<(IEnumerable<Tasks>, int totalCount)> GetTasksAsync(int page_num, int page_size, string? title)
+        public async Task<(IEnumerable<TaskListDto>, int totalCount)> GetTasksAsync(int page_num, int page_size, string? title)
         {
-            var query = _context.tasks.Include(t => t.categories).Include(u => u.poster).AsQueryable();
-
+            var query = _context.tasks.AsQueryable();
             if (!string.IsNullOrWhiteSpace(title))
             {
                 query = query.Where(t => t.title.Contains(title));
             }
             var totalCount = await query.CountAsync();
-
             var tasks = await query.OrderByDescending(t => t.created_at)
-                                .Skip((page_num - 1) * page_size)
-                                .Take(page_size).ToListAsync();
-
+                    .Skip((page_num - 1) * page_size)
+                    .Take(page_size).Select(t => new TaskListDto
+                    {
+                        id = t.id,
+                        poster_id = t.poster_id,
+                        title = t.title,
+                        task_type = t.task_type,
+                        pricing_type = t.pricing_type == 0 ? "Fixed" : "Hourly",
+                        budget = t.budget,
+                        estimated_hours = t.estimated_hours,
+                        expires_at = t.expires_at,
+                        location = t.location,
+                        suburb = t.suburb,
+                        city = t.city,
+                        postcode = t.postcode,
+                        latitude = t.latitude,
+                        longitude = t.longitude,
+                        schedule_time = t.schedule_time,
+                        created_at = t.created_at,
+                        status = t.status,
+                        poster = new UsersDto
+                        {
+                            id = t.poster_id,
+                            firstname = t.poster.firstname,
+                            lastname = t.poster.lastname,
+                            avatar_url = t.poster.avatar_url,
+                            username = t.poster.username
+                        },
+                        categories = t.categories.Select(c => new TaskCatesDto
+                        {
+                            id = c.id,
+                            title = c.title
+                        }).ToList(),
+                        offer_count = t.offers.Select(o => o.user_id).Distinct().Count(),
+                        comment_count = 0
+                    }).ToListAsync();
+            
             return (tasks, totalCount);
+
+
+
+            //var query = _context.tasks.Include(t => t.categories).Include(u => u.poster).Include(o => o.offers).AsQueryable();
+
+            //if (!string.IsNullOrWhiteSpace(title))
+            //{
+            //    query = query.Where(t => t.title.Contains(title));
+            //}
+            //var totalCount = await query.CountAsync();
+
+            //var tasks = await query.OrderByDescending(t => t.created_at)
+            //                    .Skip((page_num - 1) * page_size)
+            //                    .Take(page_size).ToListAsync();
+
+
         }
         public async Task<IEnumerable<Tasks>> GetFewTasksAsync()
         {

@@ -9,7 +9,7 @@ namespace KiwiTaskAPI.Models
         [Required]
         public Guid task_id { get; set; }
         [Required]
-        public Guid user_id { get; set; }
+        public Guid tasker_id { get; set; }
         [Required]
         public DateTime matched_at { get; set; }
         [Required]

@@ -1,9 +1,14 @@
 ﻿using AutoMapper;
 using KiwiTaskAPI.Database;
 using KiwiTaskAPI.Dtos;
+using KiwiTaskAPI.Hubs;
 using KiwiTaskAPI.Models;
+using KiwiTaskAPI.Types;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace KiwiTaskAPI.Services
 {
@@ -11,11 +16,50 @@ namespace KiwiTaskAPI.Services
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
+        private readonly IHubContext<TaskNotificationsHub> _hub;
+        private readonly ILogger<IOfferService> _log;
 
-        public OfferServiceRepository(AppDbContext context, IMapper mapper)
+        public OfferServiceRepository(AppDbContext context, IMapper mapper, IHubContext<TaskNotificationsHub> hub, ILogger<IOfferService> log)
         {
             _context = context;
             _mapper = mapper;
+            _hub = hub;
+            _log = log;
+        }
+
+        public async Task<int> AcceptOfferAsync(Guid taskid, Guid tasker_id, int offerid)
+        {
+            var taskMatch = new TaskMatches
+            {
+                task_id = taskid,
+                tasker_id = tasker_id,
+                matched_at = DateTime.UtcNow,
+                confirmed = 0,
+                confirm_expires = DateTime.UtcNow.AddDays(1)
+            };
+            await _context.task_matches.AddAsync(taskMatch);
+            var result = await _context.SaveChangesAsync();
+
+            var acceptedDto = new OfferAcceptedEventDto
+            {
+                task_id = taskid,
+                offer_id = offerid,
+                tasker_id = tasker_id,
+                matched_at = taskMatch.matched_at,
+                confirm_expires = taskMatch.confirm_expires
+            };
+
+            // broadcast to viewers of this task page
+            try
+            {
+                await _hub.Clients.Group(HubGroups.Task(taskid)).SendAsync(HubEvents.TaskOfferAccepted, acceptedDto);
+            }
+            catch(Exception e)
+            {
+                _log.LogWarning(e, "Failed to broadcast task.match.created for task {taskid}", taskid);
+            }
+            
+            return result;
         }
 
 
