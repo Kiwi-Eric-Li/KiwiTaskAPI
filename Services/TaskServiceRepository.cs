@@ -22,6 +22,16 @@ namespace KiwiTaskAPI.Services
             _mapper = mapper;
         }
 
+        public async Task<int> CancelTaskAsync(Guid taskId)
+        {
+            var task = await _context.tasks.FirstOrDefaultAsync(t => t.id == taskId); 
+            if(task == null)
+            {
+                return 0;
+            }
+            task.status = "Cancelled";
+            return await _context.SaveChangesAsync();
+        }
 
         public async Task<TasksDto> GetTaskByIdAsync(Guid taskId)
         {

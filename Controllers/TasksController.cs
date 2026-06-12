@@ -22,6 +22,18 @@ namespace KiwiTaskAPI.Controllers
             _mapper = mapper;
         }
 
+        [HttpPut("cancel")]
+        [Authorize]
+        public async Task<IActionResult> CancelTask([FromQuery] Guid taskid)
+        {
+            var result = await _taskRepository.CancelTaskAsync(taskid);
+            return Ok(new
+            {
+                code = 0,
+                data = result
+            });
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetAllTasks([FromQuery] int page_num = 1, [FromQuery] int page_size = 10, [FromQuery] string? title = null)      // IActionResult returns a response of HTTP
         {

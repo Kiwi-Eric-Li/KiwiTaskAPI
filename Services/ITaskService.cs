@@ -14,6 +14,9 @@ namespace KiwiTaskAPI.Services
         Task<TasksDto> GetTaskByIdAsync(Guid taskId);
         Task<int> CreateTaskAsync(Tasks taskEntity);
 
+        // cancel a task
+        Task<int> CancelTaskAsync(Guid taskId);
+
         
     }
 }

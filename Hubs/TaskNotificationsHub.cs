@@ -13,24 +13,13 @@ namespace KiwiTaskAPI.Hubs
             _log = log;
         }
 
-        //[Authorize]
         public async Task JoinedTask(Guid taskid)
         {
-            Console.WriteLine($"<<<<<<<<========={Context.User?.Identity?.IsAuthenticated}");
-
-            foreach (var claim in Context.User.Claims)
-            {
-                Console.WriteLine($"{claim.Type} = {claim.Value}");
-            }
-
-
-
             await Groups.AddToGroupAsync(Context.ConnectionId, HubGroups.Task(taskid));
             _log.LogInformation("Conn {ConnId} joined {Group}", Context.ConnectionId, HubGroups.Task(taskid));
             await Clients.Caller.SendAsync(HubEvents.JoinedTask, new { task_id = taskid});
         }
 
-        //[Authorize]
         public async Task LeftTask(Guid taskid)
         {
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, HubGroups.Task(taskid));

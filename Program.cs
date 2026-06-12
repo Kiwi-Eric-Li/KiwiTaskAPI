@@ -70,11 +70,9 @@ namespace KiwiTaskAPI
                                     {
                                         var accessToken = context.Request.Query["access_token"];
                                         var path = context.HttpContext.Request.Path;
-                                        Console.WriteLine($"accessToken={accessToken}");
                                         
                                         if(string.IsNullOrEmpty(context.Token) && !string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs"))
                                         {
-                                            Console.WriteLine("==================");
                                             context.Token = accessToken;
                                         }
                                         return Task.CompletedTask;
