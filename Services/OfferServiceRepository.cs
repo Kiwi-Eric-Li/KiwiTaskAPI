@@ -52,7 +52,10 @@ namespace KiwiTaskAPI.Services
             // broadcast to viewers of this task page
             try
             {
-                await _hub.Clients.Group(HubGroups.Task(taskid)).SendAsync(HubEvents.TaskOfferAccepted, acceptedDto);
+                Console.WriteLine("before broadcasting ...");
+                await _hub.Clients.Group(HubGroups.Task(taskid)).SendAsync("task.offer.accepted", acceptedDto);
+                _log.LogInformation("Broadcase Group = {Group}", HubGroups.Task(taskid));
+                Console.WriteLine("after broadcasting ...");
             }
             catch(Exception e)
             {

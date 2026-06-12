@@ -70,13 +70,33 @@ namespace KiwiTaskAPI
                                     {
                                         var accessToken = context.Request.Query["access_token"];
                                         var path = context.HttpContext.Request.Path;
-
+                                        Console.WriteLine($"accessToken={accessToken}");
+                                        
                                         if(string.IsNullOrEmpty(context.Token) && !string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs"))
                                         {
+                                            Console.WriteLine("==================");
                                             context.Token = accessToken;
                                         }
                                         return Task.CompletedTask;
+                                    },
+
+                                    OnAuthenticationFailed = context =>
+                                    {
+                                        Console.WriteLine("AUTH FAILED");
+
+                                        Console.WriteLine(context.Exception);
+
+                                        return Task.CompletedTask;
+                                    },
+
+                                    OnTokenValidated = context =>
+                                    {
+                                        Console.WriteLine("TOKEN VALIDATED");
+
+                                        return Task.CompletedTask;
                                     }
+
+
                                 };
                             });
 
@@ -95,18 +115,17 @@ namespace KiwiTaskAPI
 
             var app = builder.Build();
 
-
-            app.MapHub<TaskNotificationsHub>("/hubs/task-notifications").RequireCors("Frontend");
-
             app.UseCors("Frontend");
             app.UseAuthentication();
             app.UseAuthorization();
 
-
             // 请求处理管道，它将控制器的路由映射到处理请求的管道中
             app.MapControllers();
 
+            app.MapHub<TaskNotificationsHub>("/hubs/task-notifications").RequireCors("Frontend");
+
             app.Run();
+
         }
     }
 }
