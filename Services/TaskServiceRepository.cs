@@ -51,7 +51,7 @@ namespace KiwiTaskAPI.Services
                 query = query.Where(t => t.title.Contains(title));
             }
             var totalCount = await query.CountAsync();
-            var tasks = await query.OrderByDescending(t => t.created_at)
+            var tasks = await query.OrderByDescending(t => t.created_at).Where(t => t.status == "Open")
                     .Skip((page_num - 1) * page_size)
                     .Take(page_size).Select(t => new TaskListDto
                     {
@@ -90,22 +90,6 @@ namespace KiwiTaskAPI.Services
                     }).ToListAsync();
             
             return (tasks, totalCount);
-
-
-
-            //var query = _context.tasks.Include(t => t.categories).Include(u => u.poster).Include(o => o.offers).AsQueryable();
-
-            //if (!string.IsNullOrWhiteSpace(title))
-            //{
-            //    query = query.Where(t => t.title.Contains(title));
-            //}
-            //var totalCount = await query.CountAsync();
-
-            //var tasks = await query.OrderByDescending(t => t.created_at)
-            //                    .Skip((page_num - 1) * page_size)
-            //                    .Take(page_size).ToListAsync();
-
-
         }
         public async Task<IEnumerable<Tasks>> GetFewTasksAsync()
         {
