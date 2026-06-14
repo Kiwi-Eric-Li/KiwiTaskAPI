@@ -29,38 +29,58 @@ namespace KiwiTaskAPI.Services
 
         public async Task<int> AcceptOfferAsync(Guid taskid, Guid tasker_id, int offerid)
         {
-            var taskMatch = new TaskMatches
-            {
-                task_id = taskid,
-                tasker_id = tasker_id,
-                matched_at = DateTime.UtcNow,
-                confirmed = 0,
-                confirm_expires = DateTime.UtcNow.AddDays(1)
-            };
-            await _context.task_matches.AddAsync(taskMatch);
-            var result = await _context.SaveChangesAsync();
+            await using var transaction = await _context.Database.BeginTransactionAsync();
 
-            var acceptedDto = new OfferAcceptedEventDto
-            {
-                task_id = taskid,
-                offer_id = offerid,
-                tasker_id = tasker_id,
-                matched_at = taskMatch.matched_at,
-                confirm_expires = taskMatch.confirm_expires
-            };
-
-            // broadcast to viewers of this task page
             try
             {
+                // insert matched record
+                var taskMatch = new TaskMatches
+                {
+                    task_id = taskid,
+                    tasker_id = tasker_id,
+                    matched_at = DateTime.UtcNow,
+                    confirmed = 0,
+                    confirm_expires = DateTime.UtcNow.AddDays(1)
+                };
+                await _context.task_matches.AddAsync(taskMatch);
+                await _context.SaveChangesAsync();
+
+                // 2. update task status
+                var task = await _context.tasks.FirstOrDefaultAsync(t => t.id == taskid);
+                if (task == null)
+                    throw new Exception("Task not found");
+
+                task.status = "Matched";
+
+                // 3. save (part of transaction)
+                var result = await _context.SaveChangesAsync();
+
+                // 4. commit transaction
+                await transaction.CommitAsync();
+
+                // 5. after commit -> broadcast event
+                var acceptedDto = new OfferAcceptedEventDto
+                {
+                    task_id = taskid,
+                    offer_id = offerid,
+                    tasker_id = tasker_id,
+                    matched_at = taskMatch.matched_at,
+                    confirm_expires = taskMatch.confirm_expires
+                };
+
+                // broadcast to viewers of this task page
                 await _hub.Clients.Group(HubGroups.Task(taskid)).SendAsync("task.offer.accepted", acceptedDto);
                 _log.LogInformation("Broadcase Group = {Group}", HubGroups.Task(taskid));
+
+                return result;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
+                await transaction.RollbackAsync();
                 _log.LogWarning(e, "Failed to broadcast task.match.created for task {taskid}", taskid);
+                throw;
             }
-            
-            return result;
+
         }
 
 
