@@ -107,7 +107,7 @@ namespace KiwiTaskAPI
 
             builder.Services.AddCors(o =>
             {
-                o.AddPolicy("Frontend", p => p.WithOrigins("http://localhost:3000", "https://kiwisquare.co.nz").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
+                o.AddPolicy("Frontend", p => p.WithOrigins("http://localhost:3000", "http://localhost:3001", "https://kiwisquare.co.nz").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
             });
             
 

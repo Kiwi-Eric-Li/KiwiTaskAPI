@@ -19,6 +19,30 @@ namespace KiwiTaskAPI.Controllers
             _mapper = mapper;
         }
 
+        [HttpPost("cancel/{offerid}")]
+        [Authorize]
+        public async Task<IActionResult> CancelOffer(Guid taskid, int offerid)
+        {
+            var result = await _offerService.CancelOfferAsync(taskid, offerid);
+            if (result > 0)
+            {
+                return Ok(new
+                {
+                    code = 0,
+                    data = result
+                });
+            }
+            else
+            {
+                return Ok(new
+                {
+                    code = 1,
+                    data = 0
+                });
+            }
+        }
+
+
         [HttpPost("accept/{taskerid}/{offerid}")]
         [Authorize]
         public async Task<IActionResult> AcceptOffer(Guid taskid, Guid taskerid, int offerid)

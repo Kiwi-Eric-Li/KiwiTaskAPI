@@ -27,12 +27,53 @@ namespace KiwiTaskAPI.Services
             _log = log;
         }
 
+        public async Task<int> CancelOfferAsync(Guid taskid, int offerid)
+        {
+            var offer = await _context.task_offers.FirstOrDefaultAsync(o => o.id == offerid);
+
+            if (offer == null)
+            {
+                throw new Exception("Offer not found.");
+            }
+
+            var match = await _context.task_matches.FirstOrDefaultAsync(m => m.task_id == offer.task_id && m.tasker_id == offer.user_id);
+
+            if (match == null)
+            {
+                throw new Exception("Match record not found.");
+            }
+
+            _context.task_matches.Remove(match);
+
+            var task = await _context.tasks.FirstOrDefaultAsync(t => t.id == offer.task_id);
+
+            if (task != null)
+            {
+                task.status = "Open";
+            }
+
+            // broadcast to viewers of this task page
+            await _hub.Clients.Group(HubGroups.Task(taskid)).SendAsync(HubEvents.TaskOfferCancelled, task.id);
+            _log.LogInformation("Broadcase Event = {Event}, Group = {Group}", HubEvents.TaskOfferCancelled, HubGroups.Task(taskid));
+
+            return await _context.SaveChangesAsync();
+        }
+
+
         public async Task<int> AcceptOfferAsync(Guid taskid, Guid tasker_id, int offerid)
         {
             await using var transaction = await _context.Database.BeginTransactionAsync();
 
             try
             {
+                var existingMatches = await _context.task_matches.Where(x => x.task_id == taskid).ToListAsync();
+
+                if (existingMatches.Any())
+                {
+                    _context.task_matches.RemoveRange(existingMatches);
+                    await _context.SaveChangesAsync();
+                }
+
                 // insert matched record
                 var taskMatch = new TaskMatches
                 {
@@ -69,8 +110,8 @@ namespace KiwiTaskAPI.Services
                 };
 
                 // broadcast to viewers of this task page
-                await _hub.Clients.Group(HubGroups.Task(taskid)).SendAsync("task.offer.accepted", acceptedDto);
-                _log.LogInformation("Broadcase Group = {Group}", HubGroups.Task(taskid));
+                await _hub.Clients.Group(HubGroups.Task(taskid)).SendAsync(HubEvents.TaskOfferAccepted, acceptedDto);
+                _log.LogInformation("Broadcase Event = {Event}, Group = {Group}", HubEvents.TaskOfferAccepted, HubGroups.Task(taskid));
 
                 return result;
             }
@@ -82,7 +123,6 @@ namespace KiwiTaskAPI.Services
             }
 
         }
-
 
         public async Task<IEnumerable<TaskOffers>> GetTaskOffersAsync(Guid taskid)
         {
