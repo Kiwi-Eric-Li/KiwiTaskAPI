@@ -36,11 +36,27 @@ namespace KiwiTaskAPI.Services
         public async Task<TasksDto> GetTaskByIdAsync(Guid taskId)
         {
             var task = await _context.tasks.Include(t => t.categories).Include(p => p.poster).Include(o => o.offers).ThenInclude(u => u.user).FirstOrDefaultAsync(n => n.id == taskId);
-            if(task is not null)
+            if (task is not null)
             {
                 task.offers = task.offers.GroupBy(o => o.user_id).Select(g => g.OrderByDescending(o => o.created_at).First()).ToList();
             }
-            return _mapper.Map<TasksDto>(task);
+
+            var dto = _mapper.Map<TasksDto>(task);
+
+            var match = await _context.task_matches
+                        .Where(x => x.task_id == taskId)
+                        .OrderByDescending(x => x.matched_at)
+                        .FirstOrDefaultAsync();
+
+            if (match != null)
+            {
+                foreach (var offer in dto.offers)
+                {
+                    offer.is_matched = offer.user_id == match.tasker_id;
+                }
+                dto.status = "Matching";
+            }
+            return dto;
         }
 
         public async Task<(IEnumerable<TaskListDto>, int totalCount)> GetTasksAsync(int page_num, int page_size, string? title)
@@ -51,7 +67,7 @@ namespace KiwiTaskAPI.Services
                 query = query.Where(t => t.title.Contains(title));
             }
             var totalCount = await query.CountAsync();
-            var tasks = await query.OrderByDescending(t => t.created_at).Where(t => t.status == "Open")
+            var tasks = await query.OrderByDescending(t => t.created_at).Where(t => t.status == "Open" || t.status == "Matched")
                     .Skip((page_num - 1) * page_size)
                     .Take(page_size).Select(t => new TaskListDto
                     {
