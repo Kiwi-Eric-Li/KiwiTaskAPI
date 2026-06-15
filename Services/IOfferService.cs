@@ -10,5 +10,6 @@ namespace KiwiTaskAPI.Services
         Task<int> CreateOfferAsync(Guid taskid, Guid userid, OfferCreateDto dto);
         Task<int> AcceptOfferAsync(Guid taskid, Guid tasker_id, int offerid);
         Task<int> CancelOfferAsync(Guid taskid, int id);
+        Task<int> DeclineInvitationAsync(Guid taskid);
     }
 }

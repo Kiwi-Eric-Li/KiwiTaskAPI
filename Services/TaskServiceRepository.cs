@@ -50,7 +50,6 @@ namespace KiwiTaskAPI.Services
 
             if (match != null)
             {
-                Console.WriteLine("match================");
                 foreach (var offer in dto.offers)
                 {
                     offer.is_matched = offer.user_id == match.tasker_id;

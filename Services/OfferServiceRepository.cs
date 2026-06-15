@@ -27,6 +27,28 @@ namespace KiwiTaskAPI.Services
             _log = log;
         }
 
+        public async Task<int> DeclineInvitationAsync(Guid taskid)
+        {
+            var match = await _context.task_matches.FirstOrDefaultAsync(m => m.task_id == taskid);
+
+            if (match == null)
+            {
+                throw new Exception("Match record not found.");
+            }
+
+            _context.task_matches.Remove(match);
+
+            var task = await _context.tasks.FirstOrDefaultAsync(t => t.id == taskid);
+
+            if (task != null)
+            {
+                task.status = "Open";
+            }
+
+            return await _context.SaveChangesAsync();
+        }
+
+
         public async Task<int> CancelOfferAsync(Guid taskid, int offerid)
         {
             var offer = await _context.task_offers.FirstOrDefaultAsync(o => o.id == offerid);
