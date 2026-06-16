@@ -29,23 +29,40 @@ namespace KiwiTaskAPI.Services
 
         public async Task<int> DeclineInvitationAsync(Guid taskid)
         {
-            var match = await _context.task_matches.FirstOrDefaultAsync(m => m.task_id == taskid);
+            await using var transaction = await _context.Database.BeginTransactionAsync();
 
-            if (match == null)
+            try
             {
-                throw new Exception("Match record not found.");
+                var match = await _context.task_matches.FirstOrDefaultAsync(m => m.task_id == taskid);
+
+                if (match == null)
+                {
+                    throw new Exception("Match record not found.");
+                }
+
+                _context.task_matches.Remove(match);
+
+                var task = await _context.tasks.FirstOrDefaultAsync(t => t.id == taskid);
+
+                if (task != null)
+                {
+                    task.status = "Open";
+                }
+                var result = await _context.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+                // broadcast
+                await _hub.Clients.Group(HubGroups.Task(taskid)).SendAsync(HubEvents.TaskMatchCancelled, taskid);
+                _log.LogInformation("Broadcase Event = {Event}, Group = {Group}", HubEvents.TaskMatchCancelled, HubGroups.Task(taskid));
+
+                return result;
             }
-
-            _context.task_matches.Remove(match);
-
-            var task = await _context.tasks.FirstOrDefaultAsync(t => t.id == taskid);
-
-            if (task != null)
+            catch (Exception e)
             {
-                task.status = "Open";
+                await transaction.RollbackAsync();
+                _log.LogWarning(e, "Failed to broadcast task.match.created for task {taskid}", taskid);
+                throw;
             }
-
-            return await _context.SaveChangesAsync();
         }
 
 

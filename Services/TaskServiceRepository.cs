@@ -111,8 +111,6 @@ namespace KiwiTaskAPI.Services
         {
             return await _context.tasks.OrderByDescending(t => t.created_at).Take(6).ToListAsync();
         }
-
-
         public async Task<int> CreateTaskAsync(Tasks taskEntity)
         {
             if(taskEntity.categories.Count > 0)

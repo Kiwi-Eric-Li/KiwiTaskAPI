@@ -19,7 +19,14 @@ namespace KiwiTaskAPI.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost("decline")]
+        [HttpPut("confirm")]
+        [Authorize]
+        public async Task<IActionResult> ConfirmInvitation(Guid taskid)
+        {
+
+        }
+
+        [HttpPut("decline")]
         [Authorize]
         public async Task<IActionResult> DeclineInvitation(Guid taskid)
         {
