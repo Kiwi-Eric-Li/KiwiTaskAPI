@@ -23,7 +23,23 @@ namespace KiwiTaskAPI.Controllers
         [Authorize]
         public async Task<IActionResult> ConfirmInvitation(Guid taskid)
         {
-
+            var result = await _offerService.ConfirmInvitationAsync(taskid);
+            if (result > 0)
+            {
+                return Ok(new
+                {
+                    code = 0,
+                    data = result
+                });
+            }
+            else
+            {
+                return Ok(new
+                {
+                    code = 1,
+                    data = 0
+                });
+            }
         }
 
         [HttpPut("decline")]

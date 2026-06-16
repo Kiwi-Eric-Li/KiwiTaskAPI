@@ -54,7 +54,10 @@ namespace KiwiTaskAPI.Services
                 {
                     offer.is_matched = offer.user_id == match.tasker_id;
                 }
-                dto.status = "Matching";
+                if(match.confirmed == 0)
+                {
+                    dto.status = "Matching";
+                }
             }
             return dto;
         }
@@ -67,7 +70,7 @@ namespace KiwiTaskAPI.Services
                 query = query.Where(t => t.title.Contains(title));
             }
             var totalCount = await query.CountAsync();
-            var tasks = await query.OrderByDescending(t => t.created_at).Where(t => t.status == "Open" || t.status == "Matched")
+            var tasks = await query.OrderByDescending(t => t.created_at).Where(t => t.status == "Open" || t.status == "Matched" || t.status == "InProgress")
                     .Skip((page_num - 1) * page_size)
                     .Take(page_size).Select(t => new TaskListDto
                     {

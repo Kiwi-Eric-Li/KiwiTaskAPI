@@ -27,6 +27,46 @@ namespace KiwiTaskAPI.Services
             _log = log;
         }
 
+        public async Task<int> ConfirmInvitationAsync(Guid taskid)
+        {
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+
+            try
+            {
+                var match = await _context.task_matches.FirstOrDefaultAsync(m => m.task_id == taskid);
+
+                if (match == null)
+                {
+                    throw new Exception("Match record not found.");
+                }
+                else
+                {
+                    match.confirmed = 1;
+                }
+                var task = await _context.tasks.FirstOrDefaultAsync(t => t.id == taskid);
+
+                if (task != null)
+                {
+                    task.status = "InProgress";
+                }
+                var result = await _context.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+
+                // broadcast
+                await _hub.Clients.Group(HubGroups.Task(taskid)).SendAsync(HubEvents.TaskMatchConfirmed, taskid);
+                _log.LogInformation("Broadcase Event = {Event}, Group = {Group}", HubEvents.TaskMatchConfirmed, HubGroups.Task(taskid));
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                await transaction.RollbackAsync();
+                _log.LogWarning(e, "Failed to broadcast Event = {Event} for task {taskid}", HubEvents.TaskMatchConfirmed, taskid);
+                throw;
+            }
+        }
+
         public async Task<int> DeclineInvitationAsync(Guid taskid)
         {
             await using var transaction = await _context.Database.BeginTransactionAsync();
@@ -60,7 +100,7 @@ namespace KiwiTaskAPI.Services
             catch (Exception e)
             {
                 await transaction.RollbackAsync();
-                _log.LogWarning(e, "Failed to broadcast task.match.created for task {taskid}", taskid);
+                _log.LogWarning(e, "Failed to broadcast Event = {Event} for task {taskid}", HubEvents.TaskMatchCancelled, taskid);
                 throw;
             }
         }
@@ -157,7 +197,7 @@ namespace KiwiTaskAPI.Services
             catch (Exception e)
             {
                 await transaction.RollbackAsync();
-                _log.LogWarning(e, "Failed to broadcast task.match.created for task {taskid}", taskid);
+                _log.LogWarning(e, "Failed to broadcast Event = {Event} for task {taskid}", HubEvents.TaskOfferAccepted, taskid);
                 throw;
             }
 
