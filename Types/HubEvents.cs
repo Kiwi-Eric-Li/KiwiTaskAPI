@@ -12,6 +12,8 @@
         public const string LeftTask = "left.task";
         public const string JoinedFeed = "joined.feed";
         public const string LeftFeed = "left.feed";
+
+        public const string Notifiy = "notify";
         
     }
 }

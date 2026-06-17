@@ -24,7 +24,7 @@ namespace KiwiTaskAPI.Migrations
 
             
 
-            modelBuilder.Entity("KiwiTaskAPI.Models.TaskMatches", b =>
+            modelBuilder.Entity("KiwiTaskAPI.Models.TaskNotifications", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -32,26 +32,42 @@ namespace KiwiTaskAPI.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("id"));
 
-                    b.Property<DateTime>("confirm_expires")
+                    b.Property<string>("body")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("created_at")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("confirmed")
+                    b.Property<int>("is_read")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("matched_at")
+                    b.Property<int>("offer_id")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("read_at")
                         .HasColumnType("datetime(6)");
 
                     b.Property<Guid>("task_id")
                         .HasColumnType("char(36)");
+
+                    b.Property<string>("title")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("type")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<Guid>("user_id")
                         .HasColumnType("char(36)");
 
                     b.HasKey("id");
 
-                    b.ToTable("task_matches");
+                    b.ToTable("task_notifications");
                 });
 
+            
 #pragma warning restore 612, 618
         }
     }

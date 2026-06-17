@@ -17,14 +17,16 @@ namespace KiwiTaskAPI.Services
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
         private readonly IHubContext<TaskNotificationsHub> _hub;
+        private readonly ITaskNotificationService _notificationService;
         private readonly ILogger<IOfferService> _log;
 
-        public OfferServiceRepository(AppDbContext context, IMapper mapper, IHubContext<TaskNotificationsHub> hub, ILogger<IOfferService> log)
+        public OfferServiceRepository(AppDbContext context, IMapper mapper, IHubContext<TaskNotificationsHub> hub, ILogger<IOfferService> log, ITaskNotificationService notificationService)
         {
             _context = context;
             _mapper = mapper;
             _hub = hub;
             _log = log;
+            _notificationService = notificationService;
         }
 
         public async Task<int> ConfirmInvitationAsync(Guid taskid)
@@ -174,11 +176,20 @@ namespace KiwiTaskAPI.Services
 
                 // 3. save (part of transaction)
                 var result = await _context.SaveChangesAsync();
+                // 4. save notification
+                await _notificationService.PushAsync(
+                    tasker_id, 
+                    HubEvents.TaskOfferAccepted, 
+                    "Your offer was accepted",
+                    $"Your offer on “{task.title}” was accepted. Please confirm within 24 hours.", 
+                    taskid, 
+                    offerid
+                );
 
-                // 4. commit transaction
+                // 5. commit transaction
                 await transaction.CommitAsync();
 
-                // 5. after commit -> broadcast event
+                // 6. after commit -> broadcast event
                 var acceptedDto = new OfferAcceptedEventDto
                 {
                     task_id = taskid,
@@ -188,7 +199,7 @@ namespace KiwiTaskAPI.Services
                     confirm_expires = taskMatch.confirm_expires
                 };
 
-                // broadcast to viewers of this task page
+                // 7. broadcast to viewers of this task page
                 await _hub.Clients.Group(HubGroups.Task(taskid)).SendAsync(HubEvents.TaskOfferAccepted, acceptedDto);
                 _log.LogInformation("Broadcase Event = {Event}, Group = {Group}", HubEvents.TaskOfferAccepted, HubGroups.Task(taskid));
 

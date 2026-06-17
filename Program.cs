@@ -24,6 +24,7 @@ namespace KiwiTaskAPI
             builder.Services.AddScoped<IOssService, OssServiceRepository>();
             builder.Services.AddScoped<ITaskMediaService, TaskMediaServiceRepository>();
             builder.Services.AddScoped<IOfferService, OfferServiceRepository>();
+            builder.Services.AddScoped<ITaskNotificationService, TaskNotificationServiceRepository>();
 
             builder.Services.AddHttpClient<IPlaceService, PlaceServiceRepository>(client =>
             {
