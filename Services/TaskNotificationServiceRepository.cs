@@ -13,11 +13,13 @@ namespace KiwiTaskAPI.Services
     {
         private readonly AppDbContext _context;
         private readonly IHubContext<TaskNotificationsHub> _hub;
+        private readonly ILogger<ITaskNotificationService> _log;
 
-        public TaskNotificationServiceRepository(AppDbContext context, IHubContext<TaskNotificationsHub> hub)
+        public TaskNotificationServiceRepository(AppDbContext context, IHubContext<TaskNotificationsHub> hub, ILogger<ITaskNotificationService> log)
         {
             _context = context;
             _hub = hub;
+            _log = log;
         }
 
 
@@ -44,7 +46,19 @@ namespace KiwiTaskAPI.Services
             _context.task_notifications.Add(entity);
             await _context.SaveChangesAsync();
 
-            await _hub.Clients.Group($"user:{userId}").SendAsync(HubEvents.Notifiy, new {
+            //await _hub.Clients.Group(HubGroups.User(userId)).SendAsync(HubEvents.Notify, new {
+            //    id = entity.id,
+            //    type = entity.type,
+            //    title = entity.title,
+            //    body = entity.body,
+            //    task_id = entity.task_id,
+            //    offer_id = entity.offer_id,
+            //    is_read = 0,
+            //    created_time = DateTime.UtcNow
+            //});
+
+            await _hub.Clients.All.SendAsync(HubEvents.Notify, new
+            {
                 id = entity.id,
                 type = entity.type,
                 title = entity.title,
@@ -54,6 +68,11 @@ namespace KiwiTaskAPI.Services
                 is_read = 0,
                 created_time = DateTime.UtcNow
             });
+
+
+            Console.WriteLine("=======Notify=========");
+            _log.LogInformation(HubEvents.Notify);
+
 
         }
     }

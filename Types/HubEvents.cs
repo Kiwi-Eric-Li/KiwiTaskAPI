@@ -13,7 +13,7 @@
         public const string JoinedFeed = "joined.feed";
         public const string LeftFeed = "left.feed";
 
-        public const string Notifiy = "notify";
+        public const string Notify = "notify";
         
     }
 }

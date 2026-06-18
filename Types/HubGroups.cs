@@ -7,5 +7,10 @@
         {
             return $"task:{taskid}";
         }
+
+        public static string User(Guid userid)
+        {
+            return $"user:{userid}";
+        }
     }
 }
