@@ -33,5 +33,6 @@ namespace KiwiTaskAPI.Dtos
         public string status { get; set; }
         public UsersDto poster { get; set; }
         public ICollection<TaskOffersDto> offers { get; set; } = new List<TaskOffersDto>();
+        public ICollection<TaskCommentsDto> comments { get; set; } = new List<TaskCommentsDto>();
     }
 }

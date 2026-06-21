@@ -24,7 +24,7 @@ namespace KiwiTaskAPI.Migrations
 
             
 
-            modelBuilder.Entity("KiwiTaskAPI.Models.TaskNotifications", b =>
+            modelBuilder.Entity("KiwiTaskAPI.Models.TaskComments", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -32,39 +32,53 @@ namespace KiwiTaskAPI.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("id"));
 
-                    b.Property<string>("body")
+                    b.Property<string>("attachments")
+                        .HasColumnType("longtext");
+
+                    b.Property<int?>("comment_id")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("commenter_user_id")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("content")
                         .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<DateTime>("created_at")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("is_read")
-                        .HasColumnType("int");
-
-                    b.Property<int>("offer_id")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("read_at")
-                        .HasColumnType("datetime(6)");
-
                     b.Property<Guid>("task_id")
                         .HasColumnType("char(36)");
 
-                    b.Property<string>("title")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("type")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<Guid>("user_id")
-                        .HasColumnType("char(36)");
+                    b.Property<DateTime>("updated_at")
+                        .HasColumnType("datetime(6)");
 
                     b.HasKey("id");
 
-                    b.ToTable("task_notifications");
+                    b.HasIndex("commenter_user_id");
+
+                    b.HasIndex("task_id");
+
+                    b.ToTable("task_comments");
+                });
+            modelBuilder.Entity("KiwiTaskAPI.Models.TaskComments", b =>
+                {
+                    b.HasOne("KiwiTaskAPI.Models.Users", "user")
+                        .WithMany()
+                        .HasForeignKey("commenter_user_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("KiwiTaskAPI.Models.Tasks", "task")
+                        .WithMany("comments")
+                        .HasForeignKey("task_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("task");
+
+                    b.Navigation("user");
                 });
 
             

@@ -48,6 +48,6 @@ namespace KiwiTaskAPI.Models
         public Users poster { get; set; }
 
         public ICollection<TaskOffers> offers { get; set; } = new List<TaskOffers>();
-
+        public ICollection<TaskComments> comments { get; set; } = new List<TaskComments>();
     }
 }
