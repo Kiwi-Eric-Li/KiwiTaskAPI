@@ -35,7 +35,7 @@ namespace KiwiTaskAPI.Services
 
         public async Task<TasksDto> GetTaskByIdAsync(Guid taskId)
         {
-            var task = await _context.tasks.Include(t => t.categories).Include(p => p.poster).Include(o => o.offers).ThenInclude(u => u.user).FirstOrDefaultAsync(n => n.id == taskId);
+            var task = await _context.tasks.Include(t => t.categories).Include(c => c.comments).Include(p => p.poster).Include(o => o.offers).ThenInclude(u => u.user).FirstOrDefaultAsync(n => n.id == taskId);
             if (task is not null)
             {
                 task.offers = task.offers.GroupBy(o => o.user_id).Select(g => g.OrderByDescending(o => o.created_at).First()).ToList();

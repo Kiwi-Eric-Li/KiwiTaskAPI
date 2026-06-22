@@ -9,6 +9,7 @@ namespace KiwiTaskAPI.Profiles
         public TaskCommentProfile()
         {
             CreateMap<TaskCommentsDto, TaskComments>();
+            CreateMap<TaskComments, TaskCommentsDto>();
         }
     }
 }

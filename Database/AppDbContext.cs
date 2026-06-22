@@ -30,7 +30,7 @@ namespace KiwiTaskAPI.Database
             modelBuilder.Entity<PreferredCategories>().HasOne(x => x.user).WithMany(x => x.preferred_categories).HasForeignKey(x => x.user_id);
             modelBuilder.Entity<Users>().HasOne(u => u.notification_settings).WithOne(u => u.user).HasForeignKey<NotificationSettings>(u => u.user_id);
             modelBuilder.Entity<TaskOffers>().HasOne(u => u.user).WithMany(u => u.offers).HasForeignKey(o => o.user_id);
-            
+            modelBuilder.Entity<TaskComments>().HasOne(x => x.task).WithMany(x => x.comments).HasForeignKey(x => x.task_id);
         }
     }
 }
