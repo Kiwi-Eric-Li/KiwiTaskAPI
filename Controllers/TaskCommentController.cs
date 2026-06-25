@@ -26,6 +26,17 @@ namespace KiwiTaskAPI.Controllers
             });
         }
 
+        [HttpPost("reply")]
+        public async Task<IActionResult> replyTaskComment(TaskCommentsDto dto)
+        {
+            var result = await _taskCommentServiceRepository.ReplyTaskCommentAsync(dto);
+            return Ok(new
+            {
+                code = 0,
+                data = result
+            });
+        }
+
 
     }
 }

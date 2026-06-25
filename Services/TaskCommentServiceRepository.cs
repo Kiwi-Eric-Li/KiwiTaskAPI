@@ -15,6 +15,18 @@ namespace KiwiTaskAPI.Services
             _mapper = mapper;
             _context = context;
         }
+
+        public async Task<int> ReplyTaskCommentAsync(TaskCommentsDto dto)
+        {
+            var taskComments = _mapper.Map<TaskComments>(dto);
+            taskComments.created_at = DateTime.Now;
+            taskComments.updated_at = DateTime.Now;
+            await _context.task_comments.AddAsync(taskComments);
+            return await _context.SaveChangesAsync();
+
+        }
+
+
         public async Task<int> CreateTaskCommentAsync(TaskCommentsDto dto)
         {
             var taskComments = _mapper.Map<TaskComments>(dto);
