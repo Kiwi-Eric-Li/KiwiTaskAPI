@@ -105,7 +105,7 @@ namespace KiwiTaskAPI.Services
                             title = c.title
                         }).ToList(),
                         offer_count = t.offers.Select(o => o.user_id).Distinct().Count(),
-                        comment_count = 0
+                        comment_count = t.comments.Select(c => c.task_id).Count()
                     }).ToListAsync();
             
             return (tasks, totalCount);
