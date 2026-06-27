@@ -22,9 +22,7 @@ namespace KiwiTaskAPI.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
-            
-
-            modelBuilder.Entity("KiwiTaskAPI.Models.TaskComments", b =>
+            modelBuilder.Entity("KiwiTaskAPI.Models.TaskCompletionCodes", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -32,56 +30,30 @@ namespace KiwiTaskAPI.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("id"));
 
-                    b.Property<string>("attachments")
-                        .HasColumnType("longtext");
-
-                    b.Property<int?>("comment_id")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("commenter_user_id")
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("content")
+                    b.Property<string>("code")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<DateTime>("created_at")
+                    b.Property<DateTime>("expires_at")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("issued_at")
                         .HasColumnType("datetime(6)");
 
                     b.Property<Guid>("task_id")
                         .HasColumnType("char(36)");
 
-                    b.Property<DateTime>("updated_at")
+                    b.Property<int>("used")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("used_at")
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("id");
 
-                    b.HasIndex("commenter_user_id");
-
-                    b.HasIndex("task_id");
-
-                    b.ToTable("task_comments");
-                });
-            modelBuilder.Entity("KiwiTaskAPI.Models.TaskComments", b =>
-                {
-                    b.HasOne("KiwiTaskAPI.Models.Users", "user")
-                        .WithMany()
-                        .HasForeignKey("commenter_user_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("KiwiTaskAPI.Models.Tasks", "task")
-                        .WithMany("comments")
-                        .HasForeignKey("task_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("task");
-
-                    b.Navigation("user");
+                    b.ToTable("task_completion_codes");
                 });
 
-            
 #pragma warning restore 612, 618
         }
     }

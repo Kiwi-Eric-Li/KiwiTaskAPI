@@ -21,6 +21,7 @@ namespace KiwiTaskAPI.Database
         public DbSet<TaskMatches> task_matches { get; set; }
         public DbSet<TaskNotifications> task_notifications { get; set; }
         public DbSet<TaskComments> task_comments { get; set; }
+        public DbSet<TaskCompletionCodes> task_completion_codes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
