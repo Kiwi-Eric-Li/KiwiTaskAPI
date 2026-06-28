@@ -16,6 +16,7 @@ namespace KiwiTaskAPI.Services
 
         // cancel a task
         Task<int> CancelTaskAsync(Guid taskId);
+        Task<CompletionCodeDto> CompletionCodeAsync(Guid taskId);
 
         
     }

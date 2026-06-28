@@ -22,6 +22,20 @@ namespace KiwiTaskAPI.Controllers
             _mapper = mapper;
         }
 
+        [HttpGet("completion-code")]
+        [Authorize]
+        public async Task<IActionResult> CompletionCode([FromQuery] Guid taskid)
+        {
+            var result = await _taskRepository.CompletionCodeAsync(taskid);
+
+            return Ok(new
+            {
+                code = 0,
+                data = result
+            });
+        }
+
+
         [HttpPut("cancel")]
         [Authorize]
         public async Task<IActionResult> CancelTask([FromQuery] Guid taskid)

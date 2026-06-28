@@ -22,6 +22,14 @@ namespace KiwiTaskAPI.Services
             _mapper = mapper;
         }
 
+        public async Task<CompletionCodeDto> CompletionCodeAsync(Guid taskId)
+        {
+            string code = Random.Shared.Next(0, 1000000).ToString("D6");
+
+        }
+
+
+
         public async Task<int> CancelTaskAsync(Guid taskId)
         {
             var task = await _context.tasks.FirstOrDefaultAsync(t => t.id == taskId); 
