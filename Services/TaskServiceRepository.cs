@@ -22,10 +22,58 @@ namespace KiwiTaskAPI.Services
             _mapper = mapper;
         }
 
-        public async Task<CompletionCodeDto> CompletionCodeAsync(Guid taskId)
+        private TaskCompletionCodes GenerateCompletionCodeEntity(Guid taskId)
         {
             string code = Random.Shared.Next(0, 1000000).ToString("D6");
 
+            var entity = new TaskCompletionCodes
+            {
+                task_id = taskId,
+                code = code,
+                issued_at = DateTime.UtcNow,
+                expires_at = DateTime.UtcNow.AddDays(3),
+                used = 0,
+                used_at = null
+            };
+            return entity;
+        }
+
+        public async Task<CompletionCodeDto> CompletionCodeAsync(Guid taskId)
+        {
+            // first, search code based on taskId
+            // second, determine whether the code is expired
+            // third,
+            //      if the code is expired
+            //      then delete the original one and generate a new one and return it;
+            
+            //      if the code is not expired
+            //      then return this code
+            var completionCode = await _context.task_completion_codes.FirstOrDefaultAsync(t => t.task_id == taskId);
+            
+            if(completionCode is null)
+            {
+                var entity = GenerateCompletionCodeEntity(taskId);
+                _context.task_completion_codes.Add(entity);
+                await _context.SaveChangesAsync();
+
+                return _mapper.Map<CompletionCodeDto>(entity);
+            }
+            else
+            {
+                if(completionCode.expires_at < DateTime.Now)
+                {
+                    _context.task_completion_codes.Remove(completionCode);
+                    var entity = GenerateCompletionCodeEntity(taskId);
+                    _context.task_completion_codes.Add(entity);
+                    await _context.SaveChangesAsync();
+
+                    return _mapper.Map<CompletionCodeDto>(entity);
+                }
+                else
+                {
+                    return _mapper.Map<CompletionCodeDto>(completionCode);
+                }
+            }
         }
 
 
